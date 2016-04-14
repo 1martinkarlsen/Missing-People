@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_sign_in">Log ind</string>
+    <string name="action_settings">Indstillinger</string>
+    <string name="error_field_required">Dette felt skal udfyldes</string>
+    <string name="error_incorrect_password">Kodeordet er forkert</string>
+    <string name="error_invalid_email">Email addressen er ugyldig</string>
+    <string name="error_invalid_password">Kodeordet er for kort</string>
+    <string name="permission_rationale"></string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Kodeord</string>
+</resources>
