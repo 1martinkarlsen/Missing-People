@@ -40,6 +40,14 @@ public class User implements Serializable {
     @JoinColumn(name = "id", referencedColumnName = "id")}, inverseJoinColumns = {
     @JoinColumn(name = "roleName")})
     private List<Role> roles = new ArrayList();
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "mp_followers", joinColumns = {
+    @JoinColumn(name = "id", referencedColumnName = "uid")})
+    private List<Missing> following = new ArrayList();
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "mp_volunteers", joinColumns = {
+    @JoinColumn(name = "id", referencedColumnName = "uid")})
+    private List<Missing> volunteering = new ArrayList();
     
     public User() {
         
@@ -50,6 +58,18 @@ public class User implements Serializable {
         this.password = PasswordHash.createHash(password);
         this.firstname = firstname;
         this.lastname = lastname;
+    }
+
+    public List<Missing> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<Missing> following) {
+        this.following = following;
+    }
+    
+    public void addFollowing(Missing search) {
+        following.add(search);
     }
 
     public String getEmail() {

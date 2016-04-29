@@ -4,6 +4,9 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>entity.User</class>
     <class>entity.Role</class>
+    <class>entity.Missing</class>
+    <class>entity.Photo</class>
+    <class>entity.SearchNews</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/missing_people?zeroDateTimeBehavior=convertToNull"/>
@@ -13,7 +16,6 @@
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
     </properties>
   </persistence-unit>
-  
   <persistence-unit name="PU_OPENSHIFT" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <non-jta-data-source>java:/comp/env/jdbc/MySQLDS</non-jta-data-source>
