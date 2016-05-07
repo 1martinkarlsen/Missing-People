@@ -16,6 +16,7 @@ public class Photo implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Blob img;
+    private String imgType;
 
     public Blob getImg() {
         return img;
@@ -32,5 +33,14 @@ public class Photo implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getImgType() {
+        return imgType;
+    }
+
+    public void setImgType(String imgType) {
+        this.imgType = imgType;
+    }
+    
     
 }

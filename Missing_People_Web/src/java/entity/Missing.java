@@ -27,8 +27,9 @@ public class Missing implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nameOfMissingPerson;
-    private Blob image;
+    private Photo image;
     private String description;
+    private String geoPosition;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateOfMissing;
     @OneToMany
@@ -41,6 +42,22 @@ public class Missing implements Serializable {
 
     public Missing() {
     }
+
+    public String getGeoPosition() {
+        return geoPosition;
+    }
+
+    public void setGeoPosition(String geoPosition) {
+        this.geoPosition = geoPosition;
+    }
+
+    public List<User> getVolenteers() {
+        return volenteers;
+    }
+
+    public void setVolenteers(List<User> volenteers) {
+        this.volenteers = volenteers;
+    }
     
     public Missing(String nameOfMissingPerson, String description, Date dateOfMissing) {
         this.nameOfMissingPerson = nameOfMissingPerson;
@@ -49,11 +66,11 @@ public class Missing implements Serializable {
         this.dateOfMissing = dateOfMissing;
     }
 
-    public Blob getImage() {
+    public Photo getImage() {
         return image;
     }
 
-    public void setImage(Blob image) {
+    public void setImage(Photo image) {
         this.image = image;
     }
     

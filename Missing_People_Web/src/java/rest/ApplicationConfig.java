@@ -15,6 +15,7 @@ public class ApplicationConfig extends Application {
 
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(exception.mapper.UnknownServerExceptionMapper.class);
+        resources.add(rest.MissingRest.class);
         resources.add(rest.UserRest.class);
     }
     
