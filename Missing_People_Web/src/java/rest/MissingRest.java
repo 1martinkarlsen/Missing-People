@@ -4,13 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import entity.Missing;
 import facade.MissingPeopleFacade;
 import java.util.List;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -18,7 +21,7 @@ import javax.ws.rs.core.Response;
 @Path("missing")
 public class MissingRest {
 
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").setPrettyPrinting().create();
     MissingPeopleFacade mpFacade = new MissingPeopleFacade();
     
     @Context
@@ -36,7 +39,7 @@ public class MissingRest {
         
         List<Missing> missingList = mpFacade.getAll();
         
-        for(Missing missingPerson : mpFacade.getAll()) {
+        for(Missing missingPerson : missingList) {
             JsonObject singlePerson = new JsonObject();
             
             singlePerson.addProperty("id", missingPerson.getId());
@@ -49,6 +52,17 @@ public class MissingRest {
             jsonArr.add(singlePerson);
         }
         return Response.ok(gson.toJson(jsonArr), MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Produces("application/json")
+    @Consumes("application/json")
+    @Path("/create")
+    public Response createNewSearch(String content) {
+        System.out.println(content);
+        Missing newSearch = gson.fromJson(content, Missing.class);
+        
+        return Response.ok(gson.toJson(mpFacade.createSearch(newSearch)), MediaType.APPLICATION_JSON).build();
     }
 
 }

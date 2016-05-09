@@ -21,7 +21,27 @@ public class MissingPeopleFacade {
             return query.getResultList();
         } catch (Exception e) {
             System.out.println("You done fucked up! -> " + e.getMessage());
+        } finally {
+            em.close();
         }
+        return null;
+    }
+    
+    public Missing createSearch(Missing missingToCreate) {
+        em = emf.createEntityManager();
+        
+        try {
+            em.getTransaction().begin();
+            em.persist(missingToCreate);
+            em.getTransaction().commit();
+                    
+            return missingToCreate;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        
         return null;
     }
 }

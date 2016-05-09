@@ -1,11 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="missingPeople">
     <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Missing People</title
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,600italic,700' rel='stylesheet' type='text/css'>
+        
+        <!-- jQuery Components -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> 
+        
+        <!-- Bootstrap Components -->
+        <link rel="stylesheet" type="text/css" href="app/components/bootstrap-3.3.6-dist/css/bootstrap.css">
+        <script src="app/components/bootstrap-3.3.6-dist/js/bootstrap.js"></script>
+
+        <!-- Angular Components -->
+        <script src="app/components/angular/angular.js"></script>
+        <script src="app/components/angular/angular-route.js"></script>
+        <script src="app/components/angular/ngStorage.js"></script>
+        <script src="app/components/angular/ngStorage.min.js"></script>
+        <script src="app/components/angular/bootstrap/ui-bootstrap-tpls.js"></script>
+        <script src="app/components/angular/bootstrap/mdr-datepicker.js"></script>
+        <script src="app/components/angular/bootstrap/mdr-datepicker.min.js"></script>
+        <script src="app/components/angular/bootstrap/ng-file-upload.js"></script>
+        <script src="app/components/angular/bootstrap/ng-file-upload.min.js"></script>
+
+        <!-- My Files -->
+        <script src="app/app.js"></script>
+        <script src="app/components/controllers.js"></script>
+        <script src="app/components/services.js"></script>
+        <script src="app/pages/home/home.js"></script>
+        <script src="app/pages/login/login.js"></script>
     </head>
-    <body>
-        <div>TODO write content</div>
+    <body ng-app="missingPeople" ng-controller="AppController as mainCtrl">
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#/landingpage">Missing People</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#/landingpage">Forside <span class="sr-only">(current)</span></a></li>
+                    </ul>
+                    
+                    <ul class="nav navbar-nav navbar-right">
+                        <li ng-if="!mainCtrl.getCurrentUser().isLogged"><a href="#/login" class="btn navbar-btn nav_loginBtn theme_lightgreen">Login</a></li>
+                        <li ng-if="mainCtrl.getCurrentUser().isLogged" class="dropdown">
+                            <a class="btn navbar-btn nav_loginBtn theme_lightgreen dropdown-toggle" data-toggle="dropdown" role="button" aria-hashpopup="true" aria-expanded="false"> {{mainCtrl.getCurrentUser().firstname}} <span class="caret"></span></a>
+                        
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Profil</a></li>
+                                <li><a href="#" ng-click="mainCtrl.logout()">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+
+        <div class="content-container" ng-view></div>
     </body>
 </html>
