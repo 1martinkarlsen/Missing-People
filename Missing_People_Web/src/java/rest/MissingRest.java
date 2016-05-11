@@ -6,7 +6,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import entity.Missing;
+import entity.Photo;
 import facade.MissingPeopleFacade;
+import java.io.InputStream;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Context;
@@ -15,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -60,8 +63,15 @@ public class MissingRest {
     @Path("/create")
     public Response createNewSearch(String content) {
         System.out.println(content);
-        Missing newSearch = gson.fromJson(content, Missing.class);
+        JsonObject json = new JsonParser().parse(content).getAsJsonObject();
         
+        System.out.println(json);
+        
+        Photo photoOfMissingPerson = gson.fromJson(json.get("file"), Photo.class);
+        Missing newSearch = gson.fromJson(content, Missing.class);
+        newSearch.setImage(photoOfMissingPerson);
+        
+        // return null;
         return Response.ok(gson.toJson(mpFacade.createSearch(newSearch)), MediaType.APPLICATION_JSON).build();
     }
 

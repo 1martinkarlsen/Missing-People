@@ -6,6 +6,7 @@ import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,6 +29,7 @@ public class Missing implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nameOfMissingPerson;
+    @OneToOne(cascade = CascadeType.ALL)
     private Photo image;
     private String description;
     private String geoPosition;
@@ -41,6 +44,13 @@ public class Missing implements Serializable {
     private List<User> followers = new ArrayList();
 
     public Missing() {
+    }
+    
+    public Missing(String nameOfMissingPerson, String description, Date dateOfMissing) {
+        this.nameOfMissingPerson = nameOfMissingPerson;
+        this.image = image;
+        this.description = description;
+        this.dateOfMissing = dateOfMissing;
     }
 
     public String getGeoPosition() {
@@ -57,13 +67,6 @@ public class Missing implements Serializable {
 
     public void setVolenteers(List<User> volenteers) {
         this.volenteers = volenteers;
-    }
-    
-    public Missing(String nameOfMissingPerson, String description, Date dateOfMissing) {
-        this.nameOfMissingPerson = nameOfMissingPerson;
-        this.image = image;
-        this.description = description;
-        this.dateOfMissing = dateOfMissing;
     }
 
     public Photo getImage() {

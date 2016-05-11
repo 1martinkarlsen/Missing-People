@@ -2,6 +2,7 @@ package facade;
 
 import control.DbConnecter;
 import entity.Missing;
+import entity.Photo;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;

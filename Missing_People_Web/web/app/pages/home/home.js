@@ -1,55 +1,42 @@
 'use strict';
-
+        
 angular.module('missingPeople.home', ['ngRoute', 'ngFileUpload'])
 
 .config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.when('/home', {
-            templateUrl: 'app/pages/home/home.html',
+    $routeProvider.when('/home', {
+    templateUrl: 'app/pages/home/home.html',
             controller: 'HomeController',
             controllerAs: 'ctrl'
-        });
-    }])
+    });
+}])
 
-.directive('fileModel', ['$parse', function ($parse) {
+.directive("fileread", [function () {
     return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            var model = $parse(attrs.fileModel);
-            var modelSetter = model.assign;
-            
-            element.bind('change', function(){
-                scope.$apply(function(){
-                    modelSetter(scope, element[0].files[0]);
-                });
+        scope: {
+            fileread: "="
+        },
+        link: function (scope, element, attributes) {
+            element.bind("change", function (changeEvent) {
+                var reader = new FileReader();
+                reader.onload = function (loadEvent) {
+                    scope.$apply(function () {
+                        scope.fileread = loadEvent.target.result;
+                    });
+                };
+                reader.readAsDataURL(changeEvent.target.files[0]);
             });
         }
     };
 }])
 
-.service('fileUpload', ['$http', function ($http) {
-    this.uploadFileToUrl = function(file, uploadUrl){
-        var fd = new FormData();
-        fd.append('file', file);
-        $http.post(uploadUrl, fd, {
-            transformRequest: angular.identity,
-            headers: {'Content-Type': undefined}
-        })
-        .success(function(){
-        })
-        .error(function(){
-        });
-    };
-}])
-
-
 .controller('HomeController', function ($scope, $http, UserService) {
 
     var self = this;
-
+    
+    $scope.uploadme = {};
+    
     if (UserService.getCurrentUser().isLogged) {
-
         self.missingList = getAllMissingPeople();
-
     }
 
     function getAllMissingPeople() {
@@ -57,28 +44,29 @@ angular.module('missingPeople.home', ['ngRoute', 'ngFileUpload'])
 
             console.log(res);
             self.missingList = res;
-
         }).error(function (res) {
             console.log("ERROR getting list");
             console.log(res);
         });
     };
-
-
+        
     self.createSearch = function (credentials) {
 
-        var file = $scope.myFile;
-
+        //fileUpload.uploadFileToUrl(file);
+        
+        var file = $scope.uploadme;
         var d = new Date(credentials.dateOfMissing);
         credentials.dateOfMissing = d.toISOString();
         
-        var fd = new FormData();
-        fd.append('file', angular.toJson(file));
-        fd.append('data', angular.toJson(credentials));
-
-        console.log(fd[0]);
-
-        $http.post("api/missing/create", fd).success(function(res) {
+        //var fd = new FormData();
+        //fd.append('file', file);
+        //fd.append('data', credentials);
+        
+        credentials.file = file;
+        
+        console.log(credentials.file);
+        
+        $http.post("api/missing/create", credentials).success(function(res) {
             
             console.log(res);
             getAllMissingPeople();
@@ -90,4 +78,15 @@ angular.module('missingPeople.home', ['ngRoute', 'ngFileUpload'])
             console.log(res);
         });
     };
+    
+    function uploadFile(file) {
+        file.upload =  $upload.upload({
+            url: 'api/missing/create',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            file: file
+        });
+    }
 });
