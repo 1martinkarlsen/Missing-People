@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -15,17 +16,18 @@ public class Photo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Blob img;
+    @Lob
+    private byte[] img;
     private String imgType;
 
-    public Blob getImg() {
+    public byte[] getImg() {
         return img;
     }
 
-    public void setImg(Blob img) {
+    public void setImg(byte[] img) {
         this.img = img;
     }
-
+    
     public Long getId() {
         return id;
     }

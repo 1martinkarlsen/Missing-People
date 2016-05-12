@@ -15,7 +15,7 @@
 
         <tbody>
             <tr ng-repeat="missingPerson in ctrl.missingList">
-                <td>{{missingPerson.id}}</td>
+                <td><img class="missingPersonImg" ng-src="data:image/jpeg;base64,{{missingPerson.Photo}}" /><td>
                 <td>{{missingPerson.Name}}</td>
                 <td>{{missingPerson.Description}}</td>
                 <td>{{missingPerson.DateOfMissing}}</td>

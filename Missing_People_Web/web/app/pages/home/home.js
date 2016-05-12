@@ -43,6 +43,7 @@ angular.module('missingPeople.home', ['ngRoute', 'ngFileUpload'])
         $http.get("api/missing/all").success(function (res) {
 
             console.log(res);
+            //res.Photo = res.Photo.substr(8);
             self.missingList = res;
         }).error(function (res) {
             console.log("ERROR getting list");
