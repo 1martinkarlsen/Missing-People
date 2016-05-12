@@ -33,6 +33,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,6 +51,8 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.vixo.missing_people.model.User;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -58,13 +65,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -173,14 +173,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
+        // Check if password is entered and if password is more than 3 characters.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
         }
 
-        // Check for a valid email address.
+        // Check if email is entered and contains a "@".
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
@@ -310,6 +310,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
         private final String mEmail;
         private final String mPassword;
 
@@ -359,13 +361,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if(responseCode == 200) {
                     JSONObject newUser = new JSONObject(response.toString());
 
+                    JsonElement json = new JsonParser().parse(response.toString());
+                    User myUser = gson.fromJson(json, User.class);
+
                     SharedPreferences userPref = getSharedPreferences("userPref", Context.MODE_PRIVATE);
                     SharedPreferences.Editor prefEditor = userPref.edit();
+
+                    prefEditor.putString("User", gson.toJson(myUser));
                     prefEditor.putBoolean("isLoggedIn", true);
-                    prefEditor.putBoolean("isBanned", newUser.getBoolean("isBanned"));
-                    prefEditor.putString("email", newUser.getString("email"));
-                    prefEditor.putString("firstname", newUser.getString("firstname"));
-                    prefEditor.putString("lastname", newUser.getString("lastname"));
+//                    prefEditor.putBoolean("isBanned", newUser.getBoolean("isBanned"));
+//                    prefEditor.putString("email", newUser.getString("email"));
+//                    prefEditor.putString("firstname", newUser.getString("firstname"));
+//                    prefEditor.putString("lastname", newUser.getString("lastname"));
                     prefEditor.putString("token", newUser.getString("token"));
                     prefEditor.commit();
 

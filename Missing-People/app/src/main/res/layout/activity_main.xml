@@ -23,4 +23,17 @@
 
     <include layout="@layout/content_main" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarBottom"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+
 </android.support.design.widget.CoordinatorLayout>

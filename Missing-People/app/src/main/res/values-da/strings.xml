@@ -6,7 +6,10 @@
     <string name="error_incorrect_password">Kodeordet er forkert</string>
     <string name="error_invalid_email">Email addressen er ugyldig</string>
     <string name="error_invalid_password">Kodeordet er for kort</string>
-    <string name="permission_rationale"></string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Kodeord</string>
+    <string name="action_logout">Log ud</string>
+    <string name="action_profile">Profil</string>
+    <string name="action_about">Om</string>
+    <string name="permission_rationale">Kontakt tilladelse mangler </string>
 </resources>
