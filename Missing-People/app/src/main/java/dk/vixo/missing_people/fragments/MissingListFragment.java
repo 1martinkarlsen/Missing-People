@@ -1,13 +1,19 @@
 package dk.vixo.missing_people.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -24,9 +30,11 @@ import dk.vixo.missing_people.R;
 import dk.vixo.missing_people.control.MissingListAdapter;
 import dk.vixo.missing_people.model.Missing;
 
-public class MissingListFragment extends Fragment {
+public class MissingListFragment extends ListFragment {
 
+    private OnMissingItemClickedListener mCallback;
     private OnFragmentInteractionListener mListener;
+
     ArrayList<Missing> missingArr = new ArrayList<Missing>();
     MissingListAdapter missingListAdapter;
     ListView listViewMissingPersons;
@@ -49,7 +57,6 @@ public class MissingListFragment extends Fragment {
         new LoadAllMissingPeopleTask().execute();
 
         missingListAdapter = new MissingListAdapter(getContext(), missingArr);
-        //listViewMissingPersons = (ListView) getView().findViewById(R.id.listViewMissingPersons);
     }
 
     @Override
@@ -57,6 +64,12 @@ public class MissingListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_missing_list, container, false);
         listViewMissingPersons = (ListView) view.findViewById(R.id.listViewMissingPersons);
+        listViewMissingPersons.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mCallback.onMissingSelected(position);
+            }
+        });
 
         return view;
     }
@@ -71,12 +84,22 @@ public class MissingListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        if(context instanceof OnMissingItemClickedListener) {
+            mCallback = (OnMissingItemClickedListener) context;
+        } else {
+            throw new ClassCastException(context.toString() +  " must be implementet OnMissingItemClickedListener");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public interface OnMissingItemClickedListener {
+        public void onMissingSelected(int position);
     }
 
     /**

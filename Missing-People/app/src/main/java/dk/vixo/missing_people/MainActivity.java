@@ -1,5 +1,6 @@
 package dk.vixo.missing_people;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,9 +10,14 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,16 +31,18 @@ import java.util.ArrayList;
 import dk.vixo.missing_people.control.MissingListAdapter;
 import dk.vixo.missing_people.fragments.MissingListFragment;
 import dk.vixo.missing_people.fragments.ProfileFragment;
+import dk.vixo.missing_people.fragments.SpecificMissingFragment;
 import dk.vixo.missing_people.model.Missing;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity
+        implements MissingListFragment.OnMissingItemClickedListener {
 
     // Fragments
+    public MissingListFragment missingListFragment;
     public ProfileFragment profileFragment;
+    public SpecificMissingFragment specificMissingFragment;
 
     ArrayList<Missing> missingArr = new ArrayList<Missing>();
-    MissingListAdapter missingListAdapter;
-    ListView listViewMissingPersons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +57,7 @@ public class MainActivity extends AppCompatActivity  {
                 return;
             }
 
-            MissingListFragment missingListFragment = new MissingListFragment();
+            missingListFragment = new MissingListFragment();
 
             getSupportFragmentManager().beginTransaction().add(R.id.frameLayoutFragHolder, missingListFragment).commit();
         }
@@ -58,8 +66,6 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onResume() {
         super.onResume();
-
-
     }
 
     @Override
@@ -68,6 +74,8 @@ public class MainActivity extends AppCompatActivity  {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -80,7 +88,7 @@ public class MainActivity extends AppCompatActivity  {
         if (id == R.id.action_profile) {
             if(findViewById(R.id.frameLayoutFragHolder) != null) {
 
-                ProfileFragment profileFragment = new ProfileFragment();
+                profileFragment = new ProfileFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, profileFragment).commit();
             }
         }
@@ -103,5 +111,13 @@ public class MainActivity extends AppCompatActivity  {
 
     public void setActionBarTitle(String title) {
         getSupportActionBar().setTitle(title);
+    }
+
+    @Override
+    public void onMissingSelected(int position) {
+        if(findViewById(R.id.frameLayoutFragHolder) != null) {
+            specificMissingFragment = new SpecificMissingFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, specificMissingFragment).commit();
+        }
     }
 }
