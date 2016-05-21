@@ -53,8 +53,6 @@ public class MissingRest {
         JsonArray jsonArr = new JsonArray();
 
         List<Missing> missingList = mpFacade.getAll();
-
-        System.out.println("### MISSINGLIST --> " + missingList);
         
         for (Missing missingPerson : missingList) {
             JsonObject singlePerson = new JsonObject();
@@ -63,7 +61,6 @@ public class MissingRest {
             byte[] imgByteArr;
             
             if(missingPerson.getImage() != null) {
-                System.out.println(missingPerson.getImage().getImg());
                 jsonImg = Base64.encodeBase64String(missingPerson.getImage().getImg());
             }
             
@@ -84,9 +81,9 @@ public class MissingRest {
     @Consumes("application/json")
     @Path("/create")
     public Response createNewSearch(String content) throws SQLException, IOException {
-        System.out.println(content);
         JsonObject json = new JsonParser().parse(content).getAsJsonObject();
 
+        System.out.println("## JSON ##");
         System.out.println(json);
         String[] imgArr = json.get("file").toString().split(",");
         byte[] imageBytes = Base64.decodeBase64(imgArr[1]);

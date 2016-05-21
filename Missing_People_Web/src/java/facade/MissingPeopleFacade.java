@@ -30,11 +30,7 @@ public class MissingPeopleFacade {
     
     public Missing createSearch(Missing missingToCreate) {
         em = emf.createEntityManager();
-        System.out.println("missingToCreate.getNameOfMissingPerson() " + missingToCreate.getNameOfMissingPerson());
-        System.out.println("missingToCreate.getImage() " + missingToCreate.getImage());
-        System.out.println("missingToCreate.getImage().getImgType() " + missingToCreate.getImage().getImgType());
-        System.out.println("missingToCreate.getImage().getId() " + missingToCreate.getImage().getId());
-        System.out.println("missingToCreate.getImage().toString() " + missingToCreate.getImage().toString());
+        
         try {
             em.getTransaction().begin();
             em.persist(missingToCreate);
