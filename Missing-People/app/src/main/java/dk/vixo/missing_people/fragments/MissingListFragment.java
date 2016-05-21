@@ -2,6 +2,8 @@ package dk.vixo.missing_people.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 
 import dk.vixo.missing_people.MainActivity;
 import dk.vixo.missing_people.R;
+import dk.vixo.missing_people.control.ImageScaler;
 import dk.vixo.missing_people.control.MissingListAdapter;
 import dk.vixo.missing_people.model.Missing;
 
@@ -151,6 +155,11 @@ public class MissingListFragment extends ListFragment {
 
                     for(int i = 0; i < missingList.length(); i++) {
                         Missing singlePerson = new Missing(missingList.getJSONObject(i));
+                        String imgStr  = missingList.getJSONObject(i).getString("Photo");
+                        byte[] imgArr = Base64.decode(imgStr, Base64.DEFAULT);
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(imgArr, 0, imgArr.length);
+
+                        singlePerson.setPhotoOfMissingPerson(bitmap);
                         missingArr.add(singlePerson);
                     }
 
