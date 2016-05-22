@@ -1,6 +1,5 @@
 package dk.vixo.missing_people.control;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -26,6 +25,17 @@ public class ImageScaler {
         }
 
         return inSampleSize;
+    }
+
+    public static Bitmap decodeSampleBitmapFromByteArray(byte[] imgArr, int reqWidth, int reqHeight) {
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(imgArr, 0, imgArr.length);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeByteArray(imgArr, 0, imgArr.length);
     }
 
     public static Bitmap scaleToListView(Bitmap image) {

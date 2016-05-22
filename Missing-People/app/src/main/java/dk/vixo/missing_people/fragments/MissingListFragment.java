@@ -157,9 +157,9 @@ public class MissingListFragment extends ListFragment {
                         Missing singlePerson = new Missing(missingList.getJSONObject(i));
                         String imgStr  = missingList.getJSONObject(i).getString("Photo");
                         byte[] imgArr = Base64.decode(imgStr, Base64.DEFAULT);
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(imgArr, 0, imgArr.length);
+                        //Bitmap bitmap = BitmapFactory.decodeByteArray(imgArr, 0, imgArr.length);
 
-                        singlePerson.setPhotoOfMissingPerson(bitmap);
+                        singlePerson.setPhotoOfMissingPerson(ImageScaler.decodeSampleBitmapFromByteArray(imgArr, 100, 100));
                         missingArr.add(singlePerson);
                     }
 
