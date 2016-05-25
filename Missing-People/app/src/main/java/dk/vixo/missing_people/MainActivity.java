@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.LoaderManager;
@@ -23,9 +24,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import dk.vixo.missing_people.control.MissingListAdapter;
@@ -114,9 +117,26 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onMissingSelected(int position) {
+    public void onMissingSelected(int position, Missing itemDetail) {
         if(findViewById(R.id.frameLayoutFragHolder) != null) {
             specificMissingFragment = new SpecificMissingFragment();
+            Bundle details = new Bundle();
+
+            // Compressing Bitmap
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            itemDetail.getPhotoOfMissingPerson().compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+//            // Date coverting to string
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy:hh:mm:ss");
+//            String test = dateFormat.format(itemDetail.getDateOfMissing());
+
+            // Setting missing person details
+            details.putString("NameOfMissingPerson", itemDetail.getName());
+            details.putString("Description", itemDetail.getDescription());
+            //details.putString("DateOfMissing", test);
+            details.putByteArray("ImageOfMissingPerson", stream.toByteArray());
+
+            specificMissingFragment.setArguments(details);
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, specificMissingFragment).commit();
         }
     }

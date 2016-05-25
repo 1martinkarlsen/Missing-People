@@ -32,7 +32,10 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import dk.vixo.missing_people.MainActivity;
 import dk.vixo.missing_people.R;
@@ -77,7 +80,9 @@ public class MissingListFragment extends ListFragment {
         listViewMissingPersons.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mCallback.onMissingSelected(position);
+                Missing item = (Missing) listViewMissingPersons.getItemAtPosition(position);
+
+                mCallback.onMissingSelected(position, item);
             }
         });
 
@@ -109,7 +114,7 @@ public class MissingListFragment extends ListFragment {
     }
 
     public interface OnMissingItemClickedListener {
-        public void onMissingSelected(int position);
+        public void onMissingSelected(int position, Missing itemDetail);
     }
 
     /**
@@ -161,13 +166,19 @@ public class MissingListFragment extends ListFragment {
 
                     for(int i = 0; i < missingList.length(); i++) {
                         Missing singlePerson = new Missing(missingList.getJSONObject(i));
+
+//                        // Fixing date
+//                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy");
+//                        Date newDate = dateFormat.parse(missingList.getJSONObject(i).getString("DateOfMissing"));
+//                        singlePerson.setDateOfMissing(newDate);
+
+                        // Fixing image
                         String imgStr  = missingList.getJSONObject(i).getString("Photo");
                         byte[] imgArr = Base64.decode(imgStr, Base64.DEFAULT);
                         //Bitmap bitmap = BitmapFactory.decodeByteArray(imgArr, 0, imgArr.length);
 
                         singlePerson.setPhotoOfMissingPerson(ImageScaler.decodeSampleBitmapFromByteArray(imgArr, 100, 100));
                         missingArr.add(singlePerson);
-
                     }
 
                     return true;
