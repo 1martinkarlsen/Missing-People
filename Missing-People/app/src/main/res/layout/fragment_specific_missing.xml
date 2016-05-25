@@ -37,26 +37,22 @@
                 android:layout_below="@+id/detailImage"
                 android:textSize="20dp" />
 
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/detail_relative2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
             <Button
                 android:id="@+id/btnFollow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryDark"
-                android:text="Follow"/>
+
+                android:layout_alignBottom="@+id/detailDescription"
+                android:text="Follow" />
 
             <Button
                 android:id="@+id/btnVolunteer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryDark"
+                android:layout_alignBottom="@+id/detailDescription"
+                android:layout_toRightOf="@+id/btnFollow"
                 android:text="Volunteer" />
+
 
         </RelativeLayout>
     </LinearLayout>
