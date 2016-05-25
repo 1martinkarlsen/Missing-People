@@ -2,8 +2,11 @@ package dk.vixo.missing_people.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,13 +20,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -59,8 +65,6 @@ public class MissingListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
 
         new LoadAllMissingPeopleTask().execute();
-
-        missingListAdapter = new MissingListAdapter(getContext(), missingArr);
     }
 
     @Override
@@ -68,6 +72,8 @@ public class MissingListFragment extends ListFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_missing_list, container, false);
         listViewMissingPersons = (ListView) view.findViewById(R.id.listViewMissingPersons);
+        missingListAdapter = new MissingListAdapter(getContext(), missingArr);
+        listViewMissingPersons.setAdapter(missingListAdapter);
         listViewMissingPersons.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -161,6 +167,7 @@ public class MissingListFragment extends ListFragment {
 
                         singlePerson.setPhotoOfMissingPerson(ImageScaler.decodeSampleBitmapFromByteArray(imgArr, 100, 100));
                         missingArr.add(singlePerson);
+
                     }
 
                     return true;
@@ -180,7 +187,8 @@ public class MissingListFragment extends ListFragment {
             super.onPostExecute(s);
 
             if(s) {
-                listViewMissingPersons.setAdapter(missingListAdapter);
+                missingListAdapter.notifyDataSetChanged();
+//                //listViewMissingPersons.setAdapter(missingListAdapter);
             }
         }
     }
