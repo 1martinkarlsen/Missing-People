@@ -208,6 +208,7 @@ public class MissingRest {
         JsonObject jsonGet = new JsonParser().parse(content).getAsJsonObject();
         JsonObject response = new JsonObject();
         
+        
         String userId = jsonGet.get("uid").getAsString();
         String missingId = jsonGet.get("sid").getAsString();
         
@@ -238,6 +239,8 @@ public class MissingRest {
         
         JsonArray followers = new JsonArray();
         JsonArray volunteers = new JsonArray();
+        
+        // Listing followers to jsonarray 
         for(User usr : newMissing.getFollowers()) {
             JsonObject follower = new JsonObject();
             
@@ -248,6 +251,8 @@ public class MissingRest {
             
             followers.add(follower);
         }
+        
+        // Listing volunteers to jsonarray
         for(User vol : newMissing.getVolenteers()) {
             JsonObject volunteer = new JsonObject();
             
