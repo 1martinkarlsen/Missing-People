@@ -42,11 +42,11 @@ public class User implements Serializable {
     private List<Role> roles = new ArrayList();
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "mp_followers", joinColumns = {
-    @JoinColumn(name = "id", referencedColumnName = "uid")})
+    @JoinColumn(name = "id", referencedColumnName = "id")})
     private List<Missing> following = new ArrayList();
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "mp_volunteers", joinColumns = {
-    @JoinColumn(name = "id", referencedColumnName = "uid")})
+    @JoinColumn(name = "id", referencedColumnName = "id")})
     private List<Missing> volunteering = new ArrayList();
     
     public User() {

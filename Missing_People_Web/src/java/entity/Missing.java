@@ -133,4 +133,10 @@ public class Missing implements Serializable {
         followers.add(follower);
     }
     
+    public void addVolunteer(User volunteer) {
+        volenteers.add(volunteer);
+    }
+    
+    
+    
 }

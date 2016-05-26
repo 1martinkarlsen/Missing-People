@@ -39,4 +39,18 @@ public class UserFacade {
             em.close();
         }
     }
+    
+    public User getUser(long id) {
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            return em.find(User.class, id);
+        } catch (Exception e) {
+            System.out.println("Could not find user -> " + e.getMessage());
+        } finally {
+            em.close();
+        }
+        
+        return null;
+    }
 }

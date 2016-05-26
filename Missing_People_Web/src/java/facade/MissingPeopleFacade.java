@@ -3,6 +3,7 @@ package facade;
 import control.DbConnecter;
 import entity.Missing;
 import entity.Photo;
+import entity.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -28,6 +29,18 @@ public class MissingPeopleFacade {
         return null;
     }
     
+    public Missing getMissing(long id) {
+        em = emf.createEntityManager();
+        
+        try {
+            return em.find(Missing.class, id);
+        } catch (Exception e) {
+            System.out.println("You done fucked up! " + e.getMessage());
+        }
+        
+        return null;
+    }
+    
     public Missing createSearch(Missing missingToCreate) {
         em = emf.createEntityManager();
         
@@ -40,6 +53,50 @@ public class MissingPeopleFacade {
             return missingToCreate;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        
+        return null;
+    }
+    
+    public Missing followMissing(String missingToFollow, User userToFollow) {
+        em = emf.createEntityManager();
+        
+        Missing missing = getMissing(Long.parseLong(missingToFollow));
+        
+        try {
+            missing.addFollower(userToFollow);
+            
+            em.getTransaction().begin();
+            em.merge(missing);
+            em.getTransaction().commit();
+            
+            return missing;
+        } catch (Exception e) {
+            System.out.println("Something went wrong");
+        } finally {
+            em.close();
+        }
+        
+        return null;
+    }
+    
+    public Missing volunteerMissing(String missingToVolunteer, User userToFollow) {
+        em = emf.createEntityManager();
+        
+        Missing missing = getMissing(Long.parseLong(missingToVolunteer));
+        
+        try {
+            missing.addVolunteer(userToFollow);
+            
+            em.getTransaction().begin();
+            em.merge(missing);
+            em.getTransaction().commit();
+            
+            return missing;
+        } catch (Exception e) {
+            System.out.println("Something went wrong");
         } finally {
             em.close();
         }

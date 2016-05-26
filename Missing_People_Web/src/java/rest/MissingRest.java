@@ -7,7 +7,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import entity.Missing;
 import entity.Photo;
+import entity.User;
+import exception.UnknownServerException;
 import facade.MissingPeopleFacade;
+import facade.UserFacade;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -38,6 +41,7 @@ public class MissingRest {
 
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").setPrettyPrinting().create();
     MissingPeopleFacade mpFacade = new MissingPeopleFacade();
+    UserFacade userFacade = new UserFacade();
 
     @Context
     private UriInfo context;
@@ -64,12 +68,37 @@ public class MissingRest {
                 jsonImg = Base64.encodeBase64String(missingPerson.getImage().getImg());
             }
             
-            singlePerson.addProperty("id", missingPerson.getId());
+            singlePerson.addProperty("Id", missingPerson.getId());
             singlePerson.addProperty("Name", missingPerson.getNameOfMissingPerson());
             singlePerson.addProperty("Description", missingPerson.getDescription());
             singlePerson.addProperty("DateOfMissing", missingPerson.getDateOfMissing().toString());
             singlePerson.addProperty("GeoPosition", missingPerson.getGeoPosition());
             singlePerson.addProperty("Photo", jsonImg);
+            
+            JsonArray followers = new JsonArray();
+            JsonArray volunteers = new JsonArray();
+            
+            for(User usr : missingPerson.getFollowers()) {
+                JsonObject follower = new JsonObject();
+                
+                follower.addProperty("id", usr.getId());
+                follower.addProperty("email", usr.getEmail());
+                follower.addProperty("firstname", usr.getFirstname());
+                follower.addProperty("lastname", usr.getLastname());
+                followers.add(follower);
+            }
+            for(User vol : missingPerson.getVolenteers()) {
+                JsonObject volunteer = new JsonObject();
+            
+                volunteer.addProperty("Id", vol.getId());
+                volunteer.addProperty("Email", vol.getEmail());
+                volunteer.addProperty("Firstname", vol.getFirstname());
+                volunteer.addProperty("Lastname", vol.getLastname());
+            
+                volunteers.add(volunteer);
+            }
+            singlePerson.add("Followers", followers);
+            singlePerson.add("Volunteers", volunteers);
 
             jsonArr.add(singlePerson);
         }
@@ -105,5 +134,133 @@ public class MissingRest {
 
         return Response.ok(gson.toJson(mpFacade.createSearch(newSearch)), MediaType.APPLICATION_JSON).build();
     }
+    
+    @POST
+    @Produces("application/json")
+    @Consumes("application/json")
+    @Path("/follow")
+    public Response followMissingPerson(String content) throws UnknownServerException {
+        JsonObject jsonGet = new JsonParser().parse(content).getAsJsonObject();
+        JsonObject response = new JsonObject();
+        
+        String userId = jsonGet.get("uid").getAsString();
+        String missingId = jsonGet.get("sid").getAsString();
+        
+        if(userId.equals("") || missingId.equals("") ) {
+            throw new UnknownServerException("Something went wrong");
+        }
+        
+        User user = userFacade.getUser(Long.parseLong(userId));
+        if(user == null) {
+            throw new UnknownServerException("Something went wrong");
+        }
+        
+        Missing newMissing = mpFacade.followMissing(missingId, user);
+        
+        String jsonImg = "";
+        byte[] imgByteArr;
+            
+        if(newMissing.getImage() != null) {
+            jsonImg = Base64.encodeBase64String(newMissing.getImage().getImg());
+        }
+        
+        response.addProperty("Id", newMissing.getId());
+        response.addProperty("Name", newMissing.getNameOfMissingPerson());
+        response.addProperty("Description", newMissing.getDescription());
+        response.addProperty("DateOfMissing", newMissing.getDateOfMissing().toString());
+        response.addProperty("GeoPosition", newMissing.getGeoPosition());
+        response.addProperty("Photo", jsonImg);
+        
+        JsonArray followers = new JsonArray();
+        JsonArray volunteers = new JsonArray();
+        for(User usr : newMissing.getFollowers()) {
+            JsonObject follower = new JsonObject();
+            
+            follower.addProperty("Id", usr.getId());
+            follower.addProperty("Email", usr.getEmail());
+            follower.addProperty("Firstname", usr.getFirstname());
+            follower.addProperty("Lastname", usr.getLastname());
+            
+            followers.add(follower);
+        }
+        for(User vol : newMissing.getVolenteers()) {
+            JsonObject volunteer = new JsonObject();
+            
+            volunteer.addProperty("Id", vol.getId());
+            volunteer.addProperty("Email", vol.getEmail());
+            volunteer.addProperty("Firstname", vol.getFirstname());
+            volunteer.addProperty("Lastname", vol.getLastname());
+            
+            volunteers.add(volunteer);
+        }
+        response.add("Followers", followers);
+        response.add("Volunteers", volunteers);
+        
+        return Response.ok(gson.toJson(response), MediaType.APPLICATION_JSON).build();
+    }
 
+    
+    @POST
+    @Produces("application/json")
+    @Consumes("application/json")
+    @Path("/volunteer")
+    public Response vulonteerMissingPerson(String content) throws UnknownServerException {
+        JsonObject jsonGet = new JsonParser().parse(content).getAsJsonObject();
+        JsonObject response = new JsonObject();
+        
+        String userId = jsonGet.get("uid").getAsString();
+        String missingId = jsonGet.get("sid").getAsString();
+        
+        if(userId.equals("") || missingId.equals("") ) {
+            throw new UnknownServerException("Something went wrong");
+        }
+        
+        User user = userFacade.getUser(Long.parseLong(userId));
+        if(user == null) {
+            throw new UnknownServerException("Something went wrong");
+        }
+        
+        Missing newMissing = mpFacade.volunteerMissing(missingId, user);
+        
+        String jsonImg = "";
+        byte[] imgByteArr;
+            
+        if(newMissing.getImage() != null) {
+            jsonImg = Base64.encodeBase64String(newMissing.getImage().getImg());
+        }
+        
+        response.addProperty("Id", newMissing.getId());
+        response.addProperty("Name", newMissing.getNameOfMissingPerson());
+        response.addProperty("Description", newMissing.getDescription());
+        response.addProperty("DateOfMissing", newMissing.getDateOfMissing().toString());
+        response.addProperty("GeoPosition", newMissing.getGeoPosition());
+        response.addProperty("Photo", jsonImg);
+        
+        JsonArray followers = new JsonArray();
+        JsonArray volunteers = new JsonArray();
+        for(User usr : newMissing.getFollowers()) {
+            JsonObject follower = new JsonObject();
+            
+            follower.addProperty("id", usr.getId());
+            follower.addProperty("email", usr.getEmail());
+            follower.addProperty("firstname", usr.getFirstname());
+            follower.addProperty("lastname", usr.getLastname());
+            
+            followers.add(follower);
+        }
+        for(User vol : newMissing.getVolenteers()) {
+            JsonObject volunteer = new JsonObject();
+            
+            volunteer.addProperty("Id", vol.getId());
+            volunteer.addProperty("Email", vol.getEmail());
+            volunteer.addProperty("Firstname", vol.getFirstname());
+            volunteer.addProperty("Lastname", vol.getLastname());
+            
+            volunteers.add(volunteer);
+        }
+        response.add("Followers", followers);
+        response.add("Volunteers", volunteers);
+        
+        return Response.ok(gson.toJson(response), MediaType.APPLICATION_JSON).build();
+    }
 }

@@ -53,6 +53,7 @@ public class UserRest {
         
         if(user != null) {
             String token = tokenCtrl.createToken(username, user.getRoles());
+            response.addProperty("id", user.getId());
             response.addProperty("email", user.getEmail());
             response.addProperty("firstname", user.getFirstname());
             response.addProperty("lastname", user.getLastname());
