@@ -162,4 +162,46 @@ public class MissingPeopleFacade {
         
         return null;
     }
+    
+    public boolean checkIfFollowing(Long missingId, Long userId) {
+        em = emf.createEntityManager();
+        
+        Missing missing = getMissing(missingId);
+        List<User> missingFollowers = missing.getFollowers();
+        
+        try {
+            for(int i = 0; i < missingFollowers.size(); i++) {
+                if(missingFollowers.get(i).getId() == userId) {
+                    return true;
+                }
+            }
+            
+            return false;
+        } catch (Exception e) {
+            System.out.println("Something went wrong");
+        }
+        
+        return false;
+    }
+    
+    public boolean checkIfVolunteering(Long missingId, Long userId) {
+        em = emf.createEntityManager();
+        
+        Missing missing = getMissing(missingId);
+        List<User> missingFollowers = missing.getVolenteers();
+        
+        try {
+            for(int i = 0; i < missingFollowers.size(); i++) {
+                if(missingFollowers.get(i).getId() == userId) {
+                    return true;
+                }
+            }
+            
+            return false;
+        } catch (Exception e) {
+            System.out.println("Something went wrong");
+        }
+        
+        return false;
+    }
 }

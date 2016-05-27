@@ -9,6 +9,7 @@ angular.module('missingPeople.services', ['ngStorage'])
     var self = this;
     
     self.currentUser = {
+        id: '',
         isLogged: false,
         email: '',
         roles: [],
@@ -17,7 +18,8 @@ angular.module('missingPeople.services', ['ngStorage'])
         token: ''
     };
     
-    self.create = function(email, firstname, lastname, roles, token) {
+    self.create = function(id, email, firstname, lastname, roles, token) {
+        self.currentUser.id = id;
         self.currentUser.isLogged = true;
         self.currentUser.email = email;
         self.currentUser.roles = roles;
@@ -28,6 +30,7 @@ angular.module('missingPeople.services', ['ngStorage'])
         $localStorage.user = self.currentUser;
     };
     self.destroy = function() {
+        self.currentUser.id = '';
         self.currentUser.isLogged = false;
         self.currentUser.email = '';
         self.currentUser.roles = '';
@@ -80,7 +83,7 @@ angular.module('missingPeople.services', ['ngStorage'])
                 var encodedToken = data.token.split('.')[1];
                 var profile = JSON.parse(url_base64_decode(encodedToken));
                 
-                UserService.create(data.email, data.firstname, data.lastname, profile.roles.split(','), data.token);
+                UserService.create(data.id, data.email, data.firstname, data.lastname, profile.roles.split(','), data.token);
 
                 //Will set a short delay before automatically redirecting
 //                $timeout(function () {
