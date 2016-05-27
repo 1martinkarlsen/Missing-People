@@ -1,25 +1,48 @@
 package dk.vixo.missing_people.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import dk.vixo.missing_people.MainActivity;
 import dk.vixo.missing_people.R;
+import dk.vixo.missing_people.control.ImageScaler;
 import dk.vixo.missing_people.model.Missing;
+import dk.vixo.missing_people.model.User;
 
 public class SpecificMissingFragment extends Fragment {
 
@@ -29,6 +52,10 @@ public class SpecificMissingFragment extends Fragment {
     TextView txtDescription;
     TextView txtDate;
     ImageView imgView;
+
+    Button followBtn;
+    Button volunteerBtn;
+    Button cameraBtn;
 
     public SpecificMissingFragment() {
     }
@@ -55,6 +82,7 @@ public class SpecificMissingFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         missingDetail = new Missing();
+        missingDetail.setId((int) bundle.getLong("Id"));
         missingDetail.setName(bundle.getString("NameOfMissingPerson"));
         missingDetail.setDescription(bundle.getString("Description"));
 
@@ -72,6 +100,8 @@ public class SpecificMissingFragment extends Fragment {
         Bitmap b = BitmapFactory.decodeByteArray(bundle.getByteArray("ImageOfMissingPerson"), 0, bundle.getByteArray("ImageOfMissingPerson").length);
         missingDetail.setPhotoOfMissingPerson(b);
 
+        missingDetail.setFollowing(bundle.getBoolean("IsFollowing"));
+        missingDetail.setVolunteering(bundle.getBoolean("IsVolunteering"));
     }
 
     @Override
@@ -96,6 +126,36 @@ public class SpecificMissingFragment extends Fragment {
         imgView = (ImageView) view.findViewById(R.id.detailImage);
         imgView.setImageBitmap(missingDetail.getPhotoOfMissingPerson());
 
+        followBtn = (Button) view.findViewById(R.id.btnFollow);
+        volunteerBtn = (Button) view.findViewById(R.id.btnVolunteer);
+
+        // Set color of Follow button
+        if(missingDetail.isFollowing()) {
+            followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            followBtn.setText("Unfollow");
+        } else {
+            followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            followBtn.setText("Follow");
+        }
+
+        // Set color of Volunteer button
+        if(missingDetail.isVolunteering()) {
+            volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            volunteerBtn.setText("Unvolunteer");
+        } else {
+            volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            volunteerBtn.setText("Volunteer");
+        }
+
+
+        // Set onclickListeners
+        followBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new EngageMissingAsync("Follow").execute();
+            }
+        });
+
         return view;
     }
 
@@ -108,5 +168,142 @@ public class SpecificMissingFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public class EngageMissingAsync extends AsyncTask<String, String, Missing> {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").setPrettyPrinting().create();
+        String data = "";
+
+        public EngageMissingAsync(String engage) {
+            data = engage;
+        }
+
+        @Override
+        protected Missing doInBackground(String... params) {
+
+            URL url = null;
+
+            switch (data) {
+                case "Follow":
+                    try {
+                        url = new URL("http://projects-1martinkarlsen.rhcloud.com/Missing_People/api/missing/follow");
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                case "UnFollow":
+                    try {
+                        url = new URL("http://projects-1martinkarlsen.rhcloud.com/Missing_People/api/missing/unfollow");
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                case "Volunteer":
+                    try {
+                        url = new URL("http://projects-1martinkarlsen.rhcloud.com/Missing_People/api/missing/volunteer");
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                case "UnVolunteer":
+                    try {
+                        url = new URL("http://projects-1martinkarlsen.rhcloud.com/Missing_People/api/missing/unvolunteer");
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+
+            try {
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+                SharedPreferences userPref = ((MainActivity) getActivity()).getSharedPreferences("userPref", Context.MODE_PRIVATE);
+                User myUser = gson.fromJson(userPref.getString("User", null), User.class);
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("uid", myUser.getId());
+                jsonObject.accumulate("sid", missingDetail.getId());
+
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setChunkedStreamingMode(0);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+                urlConnection.addRequestProperty("Accept", "application/json");
+                urlConnection.addRequestProperty("Content-Type", "application/json");
+
+                DataOutputStream out = new DataOutputStream(urlConnection.getOutputStream());
+                out.writeBytes(jsonObject.toString());
+                out.flush();
+                out.close();
+
+                int responseCode = urlConnection.getResponseCode();
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = br.readLine()) != null) {
+                    response.append(inputLine);
+                }
+
+                br.close();
+
+                if (responseCode == 200) {
+                    JSONObject missingObj = new JSONObject(response.toString());
+                    Missing newMissing = new Missing(missingObj);
+
+                    // Fixing image
+                    String imgStr = missingObj.getString("Photo");
+                    byte[] imgArr = Base64.decode(imgStr, Base64.DEFAULT);
+                    //Bitmap bitmap = BitmapFactory.decodeByteArray(imgArr, 0, imgArr.length);
+
+                    newMissing.setPhotoOfMissingPerson(ImageScaler.decodeSampleBitmapFromByteArray(imgArr, 100, 100));
+
+                    Log.v("### MISSING ### ", newMissing.getName().toString());
+                    Log.v("### MISSING ### ", String.valueOf(newMissing.isFollowing()));
+                    Log.v("### MISSING ### ", String.valueOf(newMissing.isVolunteering()));
+
+                    return newMissing;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Missing missing) {
+            super.onPostExecute(missing);
+
+            if(missing != null) {
+
+                // Set followBtn color
+                if(missing.isFollowing()) {
+                    followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                    followBtn.setText("Unfollow");
+                    Toast.makeText(getActivity(), "is following", Toast.LENGTH_SHORT).show();
+                } else {
+                    followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    followBtn.setText("Follow");
+                    Toast.makeText(getActivity(), "is not following", Toast.LENGTH_SHORT).show();
+                }
+
+                // Set volunteerBtn color
+                if(missing.isVolunteering()) {
+                    volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                    volunteerBtn.setText("Unvolunteer");
+                } else {
+                    volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    volunteerBtn.setText("Volunteer");
+                }
+            }
+        }
     }
 }

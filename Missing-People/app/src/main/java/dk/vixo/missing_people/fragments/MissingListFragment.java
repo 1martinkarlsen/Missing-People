@@ -2,6 +2,7 @@ package dk.vixo.missing_people.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,11 +24,16 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
@@ -36,12 +42,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import dk.vixo.missing_people.MainActivity;
 import dk.vixo.missing_people.R;
 import dk.vixo.missing_people.control.ImageScaler;
 import dk.vixo.missing_people.control.MissingListAdapter;
 import dk.vixo.missing_people.model.Missing;
+import dk.vixo.missing_people.model.User;
 
 public class MissingListFragment extends ListFragment {
 
@@ -134,6 +142,8 @@ public class MissingListFragment extends ListFragment {
 
     public class LoadAllMissingPeopleTask extends AsyncTask<String, String, Boolean> {
 
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").setPrettyPrinting().create();
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -145,9 +155,25 @@ public class MissingListFragment extends ListFragment {
                 URL url = new URL("http://projects-1martinkarlsen.rhcloud.com/Missing_People/api/missing/all");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-                urlConnection.setRequestMethod("GET");
+                SharedPreferences userPref = ((MainActivity) getActivity()).getSharedPreferences("userPref", Context.MODE_PRIVATE);
+                User myUser = gson.fromJson(userPref.getString("User", null), User.class);
+                Log.v("USER ID ### ", myUser.getId().toString());
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("id", myUser.getId());
+
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setChunkedStreamingMode(0);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
                 urlConnection.addRequestProperty("Accept", "application/json");
                 urlConnection.addRequestProperty("Content-Type", "application/json");
+
+                DataOutputStream out = new DataOutputStream(urlConnection.getOutputStream());
+                out.writeBytes(jsonObject.toString());
+                out.flush();
+                out.close();
 
                 int responseCode = urlConnection.getResponseCode();
 

@@ -17,13 +17,13 @@ public class Missing {
     public String description;
     public Date dateOfMissing;
     public Bitmap photoOfMissingPerson;
-    private List following = new ArrayList<>();
-    private List volunteering = new ArrayList<>();
+    public boolean following;
+    public boolean volunteering;
 
     public Missing() {
     }
 
-    public Missing(int id, String name, String description, Date dateOfMissing, Bitmap image, List following, List volunteering) {
+    public Missing(int id, String name, String description, Date dateOfMissing, Bitmap image, boolean following, boolean volunteering) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -86,19 +86,19 @@ public class Missing {
         this.photoOfMissingPerson = photoOfMissingPerson;
     }
 
-    public List getFollowing() {
+    public boolean isFollowing() {
         return following;
     }
 
-    public void setFollowing(List following) {
+    public void setFollowing(boolean following) {
         this.following = following;
     }
 
-    public List getVolunteering() {
+    public boolean isVolunteering() {
         return volunteering;
     }
 
-    public void setVolunteering(List volunteering) {
+    public void setVolunteering(boolean volunteering) {
         this.volunteering = volunteering;
     }
 }

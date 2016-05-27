@@ -131,10 +131,13 @@ public class MainActivity extends AppCompatActivity
 //            String test = dateFormat.format(itemDetail.getDateOfMissing());
 
             // Setting missing person details
+            details.putLong("Id", itemDetail.getId());
             details.putString("NameOfMissingPerson", itemDetail.getName());
             details.putString("Description", itemDetail.getDescription());
             //details.putString("DateOfMissing", test);
             details.putByteArray("ImageOfMissingPerson", stream.toByteArray());
+            details.putBoolean("IsFollowing", itemDetail.isFollowing());
+            details.putBoolean("IsVolunteering", itemDetail.isVolunteering());
 
             specificMissingFragment.setArguments(details);
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, specificMissingFragment).commit();

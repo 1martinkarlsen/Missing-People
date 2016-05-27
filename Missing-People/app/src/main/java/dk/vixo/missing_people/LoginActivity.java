@@ -340,7 +340,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 urlConnection.setDoOutput(true);
                 urlConnection.addRequestProperty("Accept", "application/json");
                 urlConnection.addRequestProperty("Content-Type", "application/json");
-                Log.d("TAG", jsonObject.toString());
+
                 DataOutputStream out = new DataOutputStream(urlConnection.getOutputStream());
                 out.writeBytes(jsonObject.toString());
                 out.flush();
