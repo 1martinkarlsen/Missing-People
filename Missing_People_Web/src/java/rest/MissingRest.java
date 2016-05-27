@@ -49,10 +49,13 @@ public class MissingRest {
     public MissingRest() {
     }
 
-    @GET
+    @POST
     @Produces("application/json")
+    @Consumes("application/json")
     @Path("/all")
-    public Response getAllMissingPeople() throws SQLException {
+    public Response getAllMissingPeople(String content) throws SQLException {
+        String userId = new JsonParser().parse(content).getAsString();
+        
         JsonObject response = new JsonObject();
         JsonArray jsonArr = new JsonArray();
 
@@ -74,31 +77,33 @@ public class MissingRest {
             singlePerson.addProperty("DateOfMissing", missingPerson.getDateOfMissing().toString());
             singlePerson.addProperty("GeoPosition", missingPerson.getGeoPosition());
             singlePerson.addProperty("Photo", jsonImg);
+            singlePerson.addProperty("IsFollowing", mpFacade.checkIfFollowing(missingPerson.getId(), Long.parseLong(userId)));
+            singlePerson.addProperty("IsVolunteering", mpFacade.checkIfVolunteering(missingPerson.getId(), Long.parseLong(userId)));
             
-            JsonArray followers = new JsonArray();
-            JsonArray volunteers = new JsonArray();
-            
-            for(User usr : missingPerson.getFollowers()) {
-                JsonObject follower = new JsonObject();
-                
-                follower.addProperty("id", usr.getId());
-                follower.addProperty("email", usr.getEmail());
-                follower.addProperty("firstname", usr.getFirstname());
-                follower.addProperty("lastname", usr.getLastname());
-                followers.add(follower);
-            }
-            for(User vol : missingPerson.getVolenteers()) {
-                JsonObject volunteer = new JsonObject();
-            
-                volunteer.addProperty("Id", vol.getId());
-                volunteer.addProperty("Email", vol.getEmail());
-                volunteer.addProperty("Firstname", vol.getFirstname());
-                volunteer.addProperty("Lastname", vol.getLastname());
-            
-                volunteers.add(volunteer);
-            }
-            singlePerson.add("Followers", followers);
-            singlePerson.add("Volunteers", volunteers);
+//            JsonArray followers = new JsonArray();
+//            JsonArray volunteers = new JsonArray();
+//            
+//            for(User usr : missingPerson.getFollowers()) {
+//                JsonObject follower = new JsonObject();
+//                
+//                follower.addProperty("id", usr.getId());
+//                follower.addProperty("email", usr.getEmail());
+//                follower.addProperty("firstname", usr.getFirstname());
+//                follower.addProperty("lastname", usr.getLastname());
+//                followers.add(follower);
+//            }
+//            for(User vol : missingPerson.getVolenteers()) {
+//                JsonObject volunteer = new JsonObject();
+//            
+//                volunteer.addProperty("Id", vol.getId());
+//                volunteer.addProperty("Email", vol.getEmail());
+//                volunteer.addProperty("Firstname", vol.getFirstname());
+//                volunteer.addProperty("Lastname", vol.getLastname());
+//            
+//                volunteers.add(volunteer);
+//            }
+//            singlePerson.add("Followers", followers);
+//            singlePerson.add("Volunteers", volunteers);
 
             jsonArr.add(singlePerson);
         }
