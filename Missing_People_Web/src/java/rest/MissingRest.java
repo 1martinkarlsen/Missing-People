@@ -135,6 +135,8 @@ public class MissingRest {
         return Response.ok(gson.toJson(mpFacade.createSearch(newSearch)), MediaType.APPLICATION_JSON).build();
     }
     
+    
+    // REST Call to follow a Missing.
     @POST
     @Produces("application/json")
     @Consumes("application/json")
@@ -198,13 +200,82 @@ public class MissingRest {
         
         return Response.ok(gson.toJson(response), MediaType.APPLICATION_JSON).build();
     }
+    
+    // REST to UnFollow Missing
+    @POST
+    @Produces("application/json")
+    @Consumes("application/json")
+    @Path("/unfollow")
+    public Response unFollowMissingPerson(String content) throws UnknownServerException {
+        JsonObject jsonGet = new JsonParser().parse(content).getAsJsonObject();
+        JsonObject response = new JsonObject();
+        
+        String userId = jsonGet.get("uid").getAsString();
+        String missingId = jsonGet.get("sid").getAsString();
+        
+        if(userId.equals("") || missingId.equals("")) {
+            throw new UnknownServerException("Something went wrong");
+        }
+        
+        User user = userFacade.getUser(Long.parseLong(userId));
+        if(user == null) {
+            throw new UnknownServerException("Something went wrong");
+        }
+        
+        Missing newMissing = mpFacade.unfollowMissing(missingId, user);
+        
+        String jsonImg = "";
+        byte[] imgByteArr;
+            
+        if(newMissing.getImage() != null) {
+            jsonImg = Base64.encodeBase64String(newMissing.getImage().getImg());
+        }
+        
+        response.addProperty("Id", newMissing.getId());
+        response.addProperty("Name", newMissing.getNameOfMissingPerson());
+        response.addProperty("Description", newMissing.getDescription());
+        response.addProperty("DateOfMissing", newMissing.getDateOfMissing().toString());
+        response.addProperty("GeoPosition", newMissing.getGeoPosition());
+        response.addProperty("Photo", jsonImg);
+        
+        JsonArray followers = new JsonArray();
+        JsonArray volunteers = new JsonArray();
+        
+        // Listing followers to jsonarray 
+        for(User usr : newMissing.getFollowers()) {
+            JsonObject follower = new JsonObject();
+            
+            follower.addProperty("id", usr.getId());
+            follower.addProperty("email", usr.getEmail());
+            follower.addProperty("firstname", usr.getFirstname());
+            follower.addProperty("lastname", usr.getLastname());
+            
+            followers.add(follower);
+        }
+        
+        // Listing volunteers to jsonarray
+        for(User vol : newMissing.getVolenteers()) {
+            JsonObject volunteer = new JsonObject();
+            
+            volunteer.addProperty("Id", vol.getId());
+            volunteer.addProperty("Email", vol.getEmail());
+            volunteer.addProperty("Firstname", vol.getFirstname());
+            volunteer.addProperty("Lastname", vol.getLastname());
+            
+            volunteers.add(volunteer);
+        }
+        response.add("Followers", followers);
+        response.add("Volunteers", volunteers);
+        
+        return Response.ok(gson.toJson(response), MediaType.APPLICATION_JSON).build();
+    }
 
     
     @POST
     @Produces("application/json")
     @Consumes("application/json")
     @Path("/volunteer")
-    public Response vulonteerMissingPerson(String content) throws UnknownServerException {
+    public Response volunteerMissingPerson(String content) throws UnknownServerException {
         JsonObject jsonGet = new JsonParser().parse(content).getAsJsonObject();
         JsonObject response = new JsonObject();
         
@@ -222,6 +293,75 @@ public class MissingRest {
         }
         
         Missing newMissing = mpFacade.volunteerMissing(missingId, user);
+        
+        String jsonImg = "";
+        byte[] imgByteArr;
+            
+        if(newMissing.getImage() != null) {
+            jsonImg = Base64.encodeBase64String(newMissing.getImage().getImg());
+        }
+        
+        response.addProperty("Id", newMissing.getId());
+        response.addProperty("Name", newMissing.getNameOfMissingPerson());
+        response.addProperty("Description", newMissing.getDescription());
+        response.addProperty("DateOfMissing", newMissing.getDateOfMissing().toString());
+        response.addProperty("GeoPosition", newMissing.getGeoPosition());
+        response.addProperty("Photo", jsonImg);
+        
+        JsonArray followers = new JsonArray();
+        JsonArray volunteers = new JsonArray();
+        
+        // Listing followers to jsonarray 
+        for(User usr : newMissing.getFollowers()) {
+            JsonObject follower = new JsonObject();
+            
+            follower.addProperty("id", usr.getId());
+            follower.addProperty("email", usr.getEmail());
+            follower.addProperty("firstname", usr.getFirstname());
+            follower.addProperty("lastname", usr.getLastname());
+            
+            followers.add(follower);
+        }
+        
+        // Listing volunteers to jsonarray
+        for(User vol : newMissing.getVolenteers()) {
+            JsonObject volunteer = new JsonObject();
+            
+            volunteer.addProperty("Id", vol.getId());
+            volunteer.addProperty("Email", vol.getEmail());
+            volunteer.addProperty("Firstname", vol.getFirstname());
+            volunteer.addProperty("Lastname", vol.getLastname());
+            
+            volunteers.add(volunteer);
+        }
+        response.add("Followers", followers);
+        response.add("Volunteers", volunteers);
+        
+        return Response.ok(gson.toJson(response), MediaType.APPLICATION_JSON).build();
+    }
+    
+    // REST to UnVolunteer for Missing
+    @POST
+    @Produces("application/json")
+    @Consumes("application/json")
+    @Path("/unfollow")
+    public Response unVolunteerMissingPerson(String content) throws UnknownServerException {
+        JsonObject jsonGet = new JsonParser().parse(content).getAsJsonObject();
+        JsonObject response = new JsonObject();
+        
+        String userId = jsonGet.get("uid").getAsString();
+        String missingId = jsonGet.get("sid").getAsString();
+        
+        if(userId.equals("") || missingId.equals("")) {
+            throw new UnknownServerException("Something went wrong");
+        }
+        
+        User user = userFacade.getUser(Long.parseLong(userId));
+        if(user == null) {
+            throw new UnknownServerException("Something went wrong");
+        }
+        
+        Missing newMissing = mpFacade.unfollowMissing(missingId, user);
         
         String jsonImg = "";
         byte[] imgByteArr;
