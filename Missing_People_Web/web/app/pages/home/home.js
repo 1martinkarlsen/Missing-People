@@ -40,8 +40,9 @@ angular.module('missingPeople.home', ['ngRoute', 'ngFileUpload'])
     }
 
     function getAllMissingPeople() {
-        $http.post("api/missing/all", UserService.getCurrentUser().id).success(function (res) {
-
+        
+        $http.post("api/missing/all", JSON.stringify(UserService.getCurrentUser())).success(function (res) {
+           
             console.log(res);
             //res.Photo = res.Photo.substr(8);
             self.missingList = res;

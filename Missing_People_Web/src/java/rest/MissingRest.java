@@ -54,7 +54,11 @@ public class MissingRest {
     @Consumes("application/json")
     @Path("/all")
     public Response getAllMissingPeople(String content) throws SQLException {
-        String userId = new JsonParser().parse(content).getAsString();
+        System.out.println(content);
+        
+        JsonObject json = new JsonParser().parse(content).getAsJsonObject();
+        String userId = json.get("id").getAsString();
+        
         
         JsonObject response = new JsonObject();
         JsonArray jsonArr = new JsonArray();
