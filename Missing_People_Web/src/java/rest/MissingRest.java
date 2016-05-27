@@ -53,7 +53,7 @@ public class MissingRest {
     @Produces("application/json")
     @Consumes("application/json")
     @Path("/all")
-    public Response getAllMissingPeople(String content) throws SQLException {
+    public Response getAllMissingPeople(String content) throws SQLException, UnknownServerException {
         System.out.println(content);
         
         JsonObject json = new JsonParser().parse(content).getAsJsonObject();

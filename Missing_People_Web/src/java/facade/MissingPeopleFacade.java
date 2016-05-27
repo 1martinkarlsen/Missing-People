@@ -17,29 +17,26 @@ public class MissingPeopleFacade {
     EntityManagerFactory emf = dbConn.getEntityManager();
     EntityManager em;
     
-    public List<Missing> getAll() {
+    public List<Missing> getAll() throws UnknownServerException {
         em = emf.createEntityManager();
         try {
             Query query = em.createQuery("SELECT m FROM Missing m");
             return query.getResultList();
         } catch (Exception e) {
-            System.out.println("You done fucked up! -> " + e.getMessage());
+            throw new UnknownServerException(e.getMessage());
         } finally {
             em.close();
         }
-        return null;
     }
     
-    public Missing getMissing(long id) {
+    public Missing getMissing(long id) throws UnknownServerException {
         em = emf.createEntityManager();
         
         try {
             return em.find(Missing.class, id);
         } catch (Exception e) {
-            System.out.println("You done fucked up! " + e.getMessage());
+            throw new UnknownServerException(e.getMessage());
         }
-        
-        return null;
     }
     
     public Missing createSearch(Missing missingToCreate) {
@@ -62,7 +59,7 @@ public class MissingPeopleFacade {
     }
     
     // Set user to follow a specific missing.
-    public Missing followMissing(String missingToFollow, User userToFollow) {
+    public Missing followMissing(String missingToFollow, User userToFollow) throws UnknownServerException {
         em = emf.createEntityManager();
         
         Missing missing = getMissing(Long.parseLong(missingToFollow));
@@ -76,15 +73,13 @@ public class MissingPeopleFacade {
             
             return missing;
         } catch (Exception e) {
-            System.out.println("Something went wrong");
+            throw new UnknownServerException(e.getMessage());
         } finally {
             em.close();
         }
-        
-        return null;
     }
     
-    public Missing unfollowMissing(String missingToFollow, User userToFollow) {
+    public Missing unfollowMissing(String missingToFollow, User userToFollow) throws UnknownServerException {
         em = emf.createEntityManager();
         
         Missing missing = getMissing(Long.parseLong(missingToFollow));
@@ -104,16 +99,14 @@ public class MissingPeopleFacade {
             
             return missing;
         } catch (Exception e) {
-            System.out.println("Something went wrong");
+            throw new UnknownServerException(e.getMessage());
         } finally {
             em.close();
         }
-        
-        return null;
     }
     
     // Set user to volunteer finding a missing.
-    public Missing volunteerMissing(String missingToVolunteer, User userToFollow) {
+    public Missing volunteerMissing(String missingToVolunteer, User userToFollow) throws UnknownServerException {
         em = emf.createEntityManager();
         
         Missing missing = getMissing(Long.parseLong(missingToVolunteer));
@@ -127,16 +120,14 @@ public class MissingPeopleFacade {
             
             return missing;
         } catch (Exception e) {
-            System.out.println("Something went wrong");
+            throw new UnknownServerException(e.getMessage());
         } finally {
             em.close();
         }
-        
-        return null;
     }
  
     
-    public Missing unVolunteerMissing(String missingToFollow, User userToFollow) {
+    public Missing unVolunteerMissing(String missingToFollow, User userToFollow) throws UnknownServerException {
         em = emf.createEntityManager();
         
         Missing missing = getMissing(Long.parseLong(missingToFollow));
@@ -156,12 +147,10 @@ public class MissingPeopleFacade {
             
             return missing;
         } catch (Exception e) {
-            System.out.println("Something went wrong");
+            throw new UnknownServerException(e.getMessage());
         } finally {
             em.close();
         }
-        
-        return null;
     }
     
     public boolean checkIfFollowing(Long missingId, Long userId) throws UnknownServerException {
