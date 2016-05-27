@@ -50,8 +50,9 @@
                     android:layout_alignParentRight="true"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:background="@color/colorPrimary"
-                    android:text="Follow" />
+                    android:textColor="#ffffff"
+                    android:text="Follow"
+                    android:textSize="11dp"/>
 
                 <Button
                     android:id="@+id/btnVolunteer"
@@ -59,17 +60,20 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:background="@color/colorPrimary"
-                    android:text="Volunteer" />
+                    android:textColor="#ffffff"
+                    android:text="Volunteer"
+                    android:textSize="11dp"/>
 
                 <Button
-                    android:id="@+id/btnUseCamera"
+                    android:id="@+id/btnPost"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:background="@color/colorPrimary"
-                    android:text="Camera" />
+                    android:textColor="#ffffff"
+                    android:text="Post"
+                    android:textSize="11dp"/>
 
             </LinearLayout>
 
