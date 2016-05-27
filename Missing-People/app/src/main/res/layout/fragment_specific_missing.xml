@@ -37,22 +37,32 @@
                 android:layout_below="@+id/detailImage"
                 android:textSize="20dp" />
 
-            <Button
-                android:id="@+id/btnFollow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_alignBottom="@+id/detailDescription"
-                android:text="Follow" />
-
-            <Button
-                android:id="@+id/btnVolunteer"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/detailDescription"
-                android:layout_toRightOf="@+id/btnFollow"
-                android:text="Volunteer" />
+                android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/btnFollow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:text="Follow" />
+
+                <Button
+                    android:id="@+id/btnVolunteer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:text="Volunteer" />
+
+            </LinearLayout>
 
         </RelativeLayout>
     </LinearLayout>
