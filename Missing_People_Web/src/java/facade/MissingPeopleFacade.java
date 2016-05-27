@@ -4,6 +4,7 @@ import control.DbConnecter;
 import entity.Missing;
 import entity.Photo;
 import entity.User;
+import exception.UnknownServerException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -163,43 +164,40 @@ public class MissingPeopleFacade {
         return null;
     }
     
-    public boolean checkIfFollowing(Long missingId, Long userId) {
+    public boolean checkIfFollowing(Long missingId, Long userId) throws UnknownServerException {
         em = emf.createEntityManager();
         
         Missing missing = getMissing(missingId);
         List<User> missingFollowers = missing.getFollowers();
         
         try {
-            for(int i = 0; i < missingFollowers.size(); i++) {
+            for (int i = 0; i < missingFollowers.size(); i++) {
                 if(missingFollowers.get(i).getId() == userId) {
                     return true;
                 }
             }
-            
-            return false;
         } catch (Exception e) {
-            System.out.println("Something went wrong");
+            throw new UnknownServerException(e.getMessage());
         }
         
         return false;
     }
     
-    public boolean checkIfVolunteering(Long missingId, Long userId) {
+    public boolean checkIfVolunteering(Long missingId, Long userId) throws UnknownServerException {
         em = emf.createEntityManager();
         
         Missing missing = getMissing(missingId);
         List<User> missingFollowers = missing.getVolenteers();
         
         try {
-            for(int i = 0; i < missingFollowers.size(); i++) {
+            for (int i = 0; i < missingFollowers.size(); i++) {
                 if(missingFollowers.get(i).getId() == userId) {
                     return true;
                 }
             }
             
-            return false;
         } catch (Exception e) {
-            System.out.println("Something went wrong");
+            throw new UnknownServerException(e.getMessage());
         }
         
         return false;
