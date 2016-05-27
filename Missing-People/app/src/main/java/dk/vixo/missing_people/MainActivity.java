@@ -1,14 +1,20 @@
 package dk.vixo.missing_people;
 
+import android.Manifest;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.LoaderManager;
 import android.content.Loader;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,7 +22,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -45,6 +53,14 @@ public class MainActivity extends AppCompatActivity
     public ProfileFragment profileFragment;
     public SpecificMissingFragment specificMissingFragment;
 
+    //BottomBar buttons
+    private ImageButton home;
+    private ImageButton maps;
+    private ImageButton phone;
+
+    //Permission int
+    private int MY_CALL_PHONE = 1;
+
     ArrayList<Missing> missingArr = new ArrayList<Missing>();
 
     @Override
@@ -52,11 +68,49 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Topbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(findViewById(R.id.frameLayoutFragHolder) != null) {
-            if(savedInstanceState != null) {
+        //BottomBar
+        home = (ImageButton) findViewById(R.id.homeBtn);
+        maps = (ImageButton) findViewById(R.id.mapsBtn);
+        phone = (ImageButton) findViewById(R.id.phoneBtn);
+
+        //Home
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSupportFragmentManager().beginTransaction().add(R.id.frameLayoutFragHolder, missingListFragment).commit();
+                Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
+            }
+        });
+        //Maps
+
+        //Phone
+        phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:70101155"));
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, MY_CALL_PHONE);
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                startActivity(callIntent);
+            }
+        });
+
+        if (findViewById(R.id.frameLayoutFragHolder) != null) {
+            if (savedInstanceState != null) {
                 return;
             }
 
@@ -79,7 +133,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -89,7 +142,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_profile) {
-            if(findViewById(R.id.frameLayoutFragHolder) != null) {
+            if (findViewById(R.id.frameLayoutFragHolder) != null) {
 
                 profileFragment = new ProfileFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, profileFragment).commit();
@@ -118,7 +171,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onMissingSelected(int position, Missing itemDetail) {
-        if(findViewById(R.id.frameLayoutFragHolder) != null) {
+        if (findViewById(R.id.frameLayoutFragHolder) != null) {
             specificMissingFragment = new SpecificMissingFragment();
             Bundle details = new Bundle();
 
