@@ -75,6 +75,13 @@ public class MissingListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        missingListAdapter = new MissingListAdapter(getContext(), missingArr);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
         new LoadAllMissingPeopleTask().execute();
     }
 
@@ -83,7 +90,7 @@ public class MissingListFragment extends ListFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_missing_list, container, false);
         listViewMissingPersons = (ListView) view.findViewById(R.id.listViewMissingPersons);
-        missingListAdapter = new MissingListAdapter(getContext(), missingArr);
+
         listViewMissingPersons.setAdapter(missingListAdapter);
         listViewMissingPersons.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -151,13 +158,15 @@ public class MissingListFragment extends ListFragment {
 
         @Override
         protected Boolean doInBackground(String... params) {
+            missingArr.clear();
+
             try {
                 URL url = new URL("http://projects-1martinkarlsen.rhcloud.com/Missing_People/api/missing/all");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
                 SharedPreferences userPref = ((MainActivity) getActivity()).getSharedPreferences("userPref", Context.MODE_PRIVATE);
                 User myUser = gson.fromJson(userPref.getString("User", null), User.class);
-                Log.v("USER ID ### ", myUser.getId().toString());
+
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.accumulate("id", myUser.getId());
 
@@ -207,6 +216,11 @@ public class MissingListFragment extends ListFragment {
                         missingArr.add(singlePerson);
                     }
 
+                    Log.v("### START MISSING LIST", "###");
+                    for(int y = 0; y < missingArr.size(); y++) {
+                        Log.v("### MISSING -> ", missingArr.get(y).getName());
+                    }
+
                     return true;
                 }
                 //Thread.sleep(2000);
@@ -224,8 +238,9 @@ public class MissingListFragment extends ListFragment {
             super.onPostExecute(s);
 
             if(s) {
+                //Log.v("### NOTIFYING ###", "###");
+                missingListAdapter.SetMissingList(missingArr);
                 missingListAdapter.notifyDataSetChanged();
-//                //listViewMissingPersons.setAdapter(missingListAdapter);
             }
         }
     }

@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().add(R.id.frameLayoutFragHolder, missingListFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, missingListFragment).commit();
                 Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
             }
         });

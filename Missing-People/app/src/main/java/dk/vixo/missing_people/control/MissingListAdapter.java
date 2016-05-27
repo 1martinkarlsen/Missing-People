@@ -14,11 +14,14 @@ import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 
 import dk.vixo.missing_people.R;
 import dk.vixo.missing_people.model.Missing;
 
 public class MissingListAdapter extends ArrayAdapter<Missing> {
+
+    private List<Missing> missingAdpList;
 
     public static class ViewHolder {
         ImageView image;
@@ -28,11 +31,15 @@ public class MissingListAdapter extends ArrayAdapter<Missing> {
 
     public MissingListAdapter(Context context, ArrayList<Missing> missingPersons) {
         super(context, 0, missingPersons);
+
+        this.missingAdpList = missingPersons;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Missing missing = getItem(position);
+        //Missing missing = getItem(position);
+        Missing missing = missingAdpList.get(position);
+
         ViewHolder viewHolder;
 
         if(convertView == null) {
@@ -57,5 +64,13 @@ public class MissingListAdapter extends ArrayAdapter<Missing> {
         viewHolder.description.setText(missing.description);
 
         return convertView;
+    }
+
+    public List<Missing> getMissingList() {
+        return missingAdpList;
+    }
+
+    public void SetMissingList(List<Missing> missingList) {
+        this.missingAdpList = missingList;
     }
 }
