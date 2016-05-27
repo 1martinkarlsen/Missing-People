@@ -112,8 +112,6 @@ public class MissingRest {
     public Response createNewSearch(String content) throws SQLException, IOException {
         JsonObject json = new JsonParser().parse(content).getAsJsonObject();
 
-        System.out.println("## JSON ##");
-        System.out.println(json);
         String[] imgArr = json.get("file").toString().split(",");
         byte[] imageBytes = Base64.decodeBase64(imgArr[1]);
         
@@ -344,7 +342,7 @@ public class MissingRest {
     @POST
     @Produces("application/json")
     @Consumes("application/json")
-    @Path("/unfollow")
+    @Path("/unvolunteer")
     public Response unVolunteerMissingPerson(String content) throws UnknownServerException {
         JsonObject jsonGet = new JsonParser().parse(content).getAsJsonObject();
         JsonObject response = new JsonObject();
