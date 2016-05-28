@@ -213,6 +213,9 @@ public class MissingListFragment extends ListFragment {
                         //Bitmap bitmap = BitmapFactory.decodeByteArray(imgArr, 0, imgArr.length);
 
                         singlePerson.setPhotoOfMissingPerson(ImageScaler.decodeSampleBitmapFromByteArray(imgArr, 100, 100));
+                        singlePerson.setFollowing(missingList.getJSONObject(i).getBoolean("IsFollowing"));
+                        singlePerson.setVolunteering(missingList.getJSONObject(i).getBoolean("IsVolunteering"));
+
                         missingArr.add(singlePerson);
                     }
 

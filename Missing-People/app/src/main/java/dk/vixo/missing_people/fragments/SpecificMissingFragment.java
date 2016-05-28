@@ -152,7 +152,11 @@ public class SpecificMissingFragment extends Fragment {
         followBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new EngageMissingAsync("Follow").execute();
+                if(missingDetail.isFollowing()) {
+                    new EngageMissingAsync("UnFollow").execute();
+                } else {
+                    new EngageMissingAsync("Follow").execute();
+                }
             }
         });
 
@@ -265,9 +269,14 @@ public class SpecificMissingFragment extends Fragment {
 
                     newMissing.setPhotoOfMissingPerson(ImageScaler.decodeSampleBitmapFromByteArray(imgArr, 100, 100));
 
+                    newMissing.setFollowing(missingObj.getBoolean("IsFollowing"));
+                    newMissing.setVolunteering(missingObj.getBoolean("IsVolunteering"));
+
                     Log.v("### MISSING ### ", newMissing.getName().toString());
                     Log.v("### MISSING ### ", String.valueOf(newMissing.isFollowing()));
                     Log.v("### MISSING ### ", String.valueOf(newMissing.isVolunteering()));
+
+                    missingDetail = newMissing;
 
                     return newMissing;
                 }
