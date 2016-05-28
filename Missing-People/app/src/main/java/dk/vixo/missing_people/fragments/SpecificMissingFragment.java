@@ -159,6 +159,16 @@ public class SpecificMissingFragment extends Fragment {
                 }
             }
         });
+        volunteerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(missingDetail.isVolunteering()) {
+                    new EngageMissingAsync("UnVolunteer").execute();
+                } else {
+                    new EngageMissingAsync("Volunteer").execute();
+                }
+            }
+        });
 
         return view;
     }
