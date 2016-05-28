@@ -81,8 +81,8 @@ public class MissingRest {
             singlePerson.addProperty("DateOfMissing", missingPerson.getDateOfMissing().toString());
             singlePerson.addProperty("GeoPosition", missingPerson.getGeoPosition());
             singlePerson.addProperty("Photo", jsonImg);
-            singlePerson.addProperty("IsFollowing", mpFacade.checkIfFollowing(missingPerson.getId(), Long.parseLong(userId)));
-            singlePerson.addProperty("IsVolunteering", mpFacade.checkIfVolunteering(missingPerson.getId(), Long.parseLong(userId)));
+            singlePerson.addProperty("IsFollowing", userFacade.checkIfFollowing(missingPerson.getId(), Long.parseLong(userId)));
+            singlePerson.addProperty("IsVolunteering", userFacade.checkIfVolunteering(missingPerson.getId(), Long.parseLong(userId)));
             
 //            JsonArray followers = new JsonArray();
 //            JsonArray volunteers = new JsonArray();
@@ -159,12 +159,8 @@ public class MissingRest {
             throw new UnknownServerException("Something went wrong");
         }
         
-        User user = userFacade.getUser(Long.parseLong(userId));
-        if(user == null) {
-            throw new UnknownServerException("Something went wrong");
-        }
-        
-        Missing newMissing = mpFacade.followMissing(missingId, user);
+        Missing newMissing = mpFacade.getMissing(Long.parseLong(missingId));
+        User user = userFacade.followMissing(newMissing, userId);
         
         String jsonImg = "";
         byte[] imgByteArr;
@@ -179,33 +175,8 @@ public class MissingRest {
         response.addProperty("DateOfMissing", newMissing.getDateOfMissing().toString());
         response.addProperty("GeoPosition", newMissing.getGeoPosition());
         response.addProperty("Photo", jsonImg);
-        response.addProperty("IsFollowing", mpFacade.checkIfFollowing(newMissing.getId(), Long.parseLong(userId)));
-        response.addProperty("IsVolunteering", mpFacade.checkIfVolunteering(newMissing.getId(), Long.parseLong(userId)));
-        
-//        JsonArray followers = new JsonArray();
-//        JsonArray volunteers = new JsonArray();
-//        for(User usr : newMissing.getFollowers()) {
-//            JsonObject follower = new JsonObject();
-//            
-//            follower.addProperty("Id", usr.getId());
-//            follower.addProperty("Email", usr.getEmail());
-//            follower.addProperty("Firstname", usr.getFirstname());
-//            follower.addProperty("Lastname", usr.getLastname());
-//            
-//            followers.add(follower);
-//        }
-//        for(User vol : newMissing.getVolenteers()) {
-//            JsonObject volunteer = new JsonObject();
-//            
-//            volunteer.addProperty("Id", vol.getId());
-//            volunteer.addProperty("Email", vol.getEmail());
-//            volunteer.addProperty("Firstname", vol.getFirstname());
-//            volunteer.addProperty("Lastname", vol.getLastname());
-//            
-//            volunteers.add(volunteer);
-//        }
-//        response.add("Followers", followers);
-//        response.add("Volunteers", volunteers);
+        response.addProperty("IsFollowing", userFacade.checkIfFollowing(newMissing.getId(), Long.parseLong(userId)));
+        response.addProperty("IsVolunteering", userFacade.checkIfVolunteering(newMissing.getId(), Long.parseLong(userId)));
         
         return Response.ok(gson.toJson(response), MediaType.APPLICATION_JSON).build();
     }
@@ -226,12 +197,8 @@ public class MissingRest {
             throw new UnknownServerException("Something went wrong");
         }
         
-        User user = userFacade.getUser(Long.parseLong(userId));
-        if(user == null) {
-            throw new UnknownServerException("Something went wrong");
-        }
-        
-        Missing newMissing = mpFacade.unfollowMissing(missingId, user);
+        Missing newMissing = mpFacade.getMissing(Long.parseLong(missingId));
+        User user = userFacade.unfollowMissing(missingId, userId);
         
         String jsonImg = "";
         byte[] imgByteArr;
@@ -246,8 +213,8 @@ public class MissingRest {
         response.addProperty("DateOfMissing", newMissing.getDateOfMissing().toString());
         response.addProperty("GeoPosition", newMissing.getGeoPosition());
         response.addProperty("Photo", jsonImg);
-        response.addProperty("IsFollowing", mpFacade.checkIfFollowing(newMissing.getId(), Long.parseLong(userId)));
-        response.addProperty("IsVolunteering", mpFacade.checkIfVolunteering(newMissing.getId(), Long.parseLong(userId)));
+        response.addProperty("IsFollowing", userFacade.checkIfFollowing(newMissing.getId(), Long.parseLong(userId)));
+        response.addProperty("IsVolunteering", userFacade.checkIfVolunteering(newMissing.getId(), Long.parseLong(userId)));
         
 //        JsonArray followers = new JsonArray();
 //        JsonArray volunteers = new JsonArray();

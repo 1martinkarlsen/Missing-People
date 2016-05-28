@@ -42,7 +42,8 @@ public class User implements Serializable {
     private List<Role> roles = new ArrayList();
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "mp_followers", joinColumns = {
-    @JoinColumn(name = "id", referencedColumnName = "id")})
+    @JoinColumn(name = "user_id", referencedColumnName = "id")}, inverseJoinColumns = {
+    @JoinColumn(name = "follower_id", referencedColumnName = "id")})
     private List<Missing> following = new ArrayList();
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "mp_volunteers", joinColumns = {
@@ -147,5 +148,16 @@ public class User implements Serializable {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
+
+    public List<Missing> getVolunteering() {
+        return volunteering;
+    }
+
+    public void setVolunteering(List<Missing> volunteering) {
+        this.volunteering = volunteering;
+    }
     
+    public void addVolunteering(Missing missing) {
+        this.volunteering.add(missing);
+    }
 }

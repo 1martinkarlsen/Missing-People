@@ -23,6 +23,9 @@
     <class>entity.Role</class>
     <class>entity.ApiLinks</class>
     <class>entity.ReservationRequest.Reservation</class>
+    <class>entity.Missing</class>
+    <class>entity.Photo</class>
+    <class>entity.SearchNews</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>

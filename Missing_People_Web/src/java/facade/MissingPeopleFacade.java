@@ -17,6 +17,8 @@ public class MissingPeopleFacade {
     EntityManagerFactory emf = dbConn.getEntityManager();
     EntityManager em;
     
+    UserFacade userFacade = new UserFacade();
+    
     public List<Missing> getAll() throws UnknownServerException {
         em = emf.createEntityManager();
         try {
@@ -63,20 +65,26 @@ public class MissingPeopleFacade {
         em = emf.createEntityManager();
         
         Missing missing = getMissing(Long.parseLong(missingToFollow));
+        System.out.println("Missing 1: " + missing.getFollowers());
         
         try {
             missing.addFollower(userToFollow);
+            System.out.println("Missing 2: " + missing.getFollowers());
             
             em.getTransaction().begin();
             em.merge(missing);
             em.getTransaction().commit();
             
-            return missing;
+            System.out.println("Missing 3: " + getMissing(missing.getId()).getFollowers());
+            System.out.println("Missing 4: " + missing.getFollowers());
+            return getMissing(missing.getId());
         } catch (Exception e) {
-            throw new UnknownServerException(e.getMessage());
+            e.printStackTrace();
         } finally {
             em.close();
         }
+        
+        return null;
     }
     
     public Missing unfollowMissing(String missingToFollow, User userToFollow) throws UnknownServerException {
@@ -131,7 +139,7 @@ public class MissingPeopleFacade {
         em = emf.createEntityManager();
         
         Missing missing = getMissing(Long.parseLong(missingToFollow));
-        List<User> missingVolunteers = missing.getVolenteers();
+        List<User> missingVolunteers = missing.getVolunteers();
         try {
             for(int i = 0; i < missingVolunteers.size(); i++) {
                 if(missingVolunteers.get(i).getId() == userToFollow.getId()) {
@@ -139,7 +147,7 @@ public class MissingPeopleFacade {
                 }
             }
             
-            missing.setFollowers(missingVolunteers);
+            missing.setVolunteers(missingVolunteers);
             
             em.getTransaction().begin();
             em.merge(missing);
@@ -161,7 +169,7 @@ public class MissingPeopleFacade {
         
         try {
             for (int i = 0; i < missingFollowers.size(); i++) {
-                if(missingFollowers.get(i).getId() == userId) {
+                if(missingFollowers.get(i).getId().equals(userId)) {
                     return true;
                 }
             }
@@ -176,11 +184,11 @@ public class MissingPeopleFacade {
         em = emf.createEntityManager();
         
         Missing missing = getMissing(missingId);
-        List<User> missingFollowers = missing.getVolenteers();
+        List<User> missingFollowers = missing.getVolunteers();
         
         try {
             for (int i = 0; i < missingFollowers.size(); i++) {
-                if(missingFollowers.get(i).getId() == userId) {
+                if(missingFollowers.get(i).getId().equals(userId)) {
                     return true;
                 }
             }

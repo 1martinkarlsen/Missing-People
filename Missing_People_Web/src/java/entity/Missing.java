@@ -35,13 +35,10 @@ public class Missing implements Serializable {
     private String geoPosition;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateOfMissing;
-    @OneToMany
-    @JoinTable (name = "mp_searchAdmins") 
-    private List<User> admins = new ArrayList();
-    @ManyToMany(mappedBy = "volunteering")
-    private List<User> volenteers = new ArrayList();
     @ManyToMany(mappedBy = "following")
     private List<User> followers = new ArrayList();
+    @ManyToMany(mappedBy = "volunteering")
+    private List<User> volunteers = new ArrayList();
 
     public Missing() {
     }
@@ -61,12 +58,12 @@ public class Missing implements Serializable {
         this.geoPosition = geoPosition;
     }
 
-    public List<User> getVolenteers() {
-        return volenteers;
+    public List<User> getVolunteers() {
+        return volunteers;
     }
 
-    public void setVolenteers(List<User> volenteers) {
-        this.volenteers = volenteers;
+    public void setVolunteers(List<User> volunteers) {
+        this.volunteers = volunteers;
     }
 
     public Photo getImage() {
@@ -101,14 +98,6 @@ public class Missing implements Serializable {
         this.dateOfMissing = dateOfMissing;
     }
 
-    public List<User> getAdmins() {
-        return admins;
-    }
-
-    public void setAdmins(List<User> admins) {
-        this.admins = admins;
-    }
-
     public List<User> getFollowers() {
         return followers;
     }
@@ -125,16 +114,12 @@ public class Missing implements Serializable {
         this.id = id;
     }
     
-    public void addAdmin(User admin) {
-        admins.add(admin);
-    }
-    
     public void addFollower(User follower) {
         followers.add(follower);
     }
     
     public void addVolunteer(User volunteer) {
-        volenteers.add(volunteer);
+        volunteers.add(volunteer);
     }
     
     
