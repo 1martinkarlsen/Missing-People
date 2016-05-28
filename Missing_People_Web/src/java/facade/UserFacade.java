@@ -107,6 +107,53 @@ public class UserFacade {
         }
     }
 
+    public User volunteerMissing(Missing missingToVolunteer, String userToVolunteer) {
+        em = emf.createEntityManager();
+        
+        User user = getUser(Long.parseLong(userToVolunteer));
+        
+        try {
+            user.addVolunteering(missingToVolunteer);
+            
+            em.getTransaction().begin();
+            em.merge(user);
+            em.getTransaction().commit();
+            
+            return getUser(user.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        
+        return null;
+    }
+    
+    public User unvolunteerMissing(String missingToUnVolunteer, String userToVolunteer) throws UnknownServerException {
+        em = emf.createEntityManager();
+        
+        User user = getUser(Long.parseLong(userToVolunteer));
+        List<Missing> missingVolunteers = user.getVolunteering();
+        try {
+            for(int i = 0; i < missingVolunteers.size(); i++) {
+                if(missingVolunteers.get(i).getId() == Long.parseLong(missingToUnVolunteer)) {
+                    missingVolunteers.remove(i);
+                }
+            }
+            
+            user.setVolunteering(missingVolunteers);
+            
+            em.getTransaction().begin();
+            em.merge(user);
+            em.getTransaction().commit();
+            
+            return getUser(user.getId());
+        } catch (Exception e) {
+            throw new UnknownServerException(e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
     
     public boolean checkIfFollowing(Long missingId, Long userId) throws UnknownServerException {
         em = emf.createEntityManager();

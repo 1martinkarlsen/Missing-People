@@ -165,7 +165,13 @@ public class MissingPeopleFacade {
         em = emf.createEntityManager();
         
         Missing missing = getMissing(missingId);
-        List<User> missingFollowers = missing.getFollowers();
+        List<User> missingFollowers;
+        
+        try {
+            missingFollowers = missing.getFollowers();
+        } catch (Exception e) {
+            return false;
+        }
         
         try {
             for (int i = 0; i < missingFollowers.size(); i++) {
@@ -184,7 +190,13 @@ public class MissingPeopleFacade {
         em = emf.createEntityManager();
         
         Missing missing = getMissing(missingId);
-        List<User> missingFollowers = missing.getVolunteers();
+        List<User> missingFollowers;
+        
+        try {
+            missingFollowers = missing.getVolunteers();
+        } catch (Exception e) {
+            return false;
+        }
         
         try {
             for (int i = 0; i < missingFollowers.size(); i++) {
