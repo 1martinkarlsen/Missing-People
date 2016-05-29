@@ -46,6 +46,7 @@ import dk.vixo.missing_people.model.User;
 
 public class SpecificMissingFragment extends Fragment {
 
+    private OnPostClicked mCallback;
     Missing missingDetail;
 
     TextView txtName;
@@ -55,7 +56,11 @@ public class SpecificMissingFragment extends Fragment {
 
     Button followBtn;
     Button volunteerBtn;
-    Button cameraBtn;
+    Button postBtn;
+
+    public interface OnPostClicked {
+        public void OnPostClicked(Missing itemDetail);
+    }
 
     public SpecificMissingFragment() {
     }
@@ -128,6 +133,7 @@ public class SpecificMissingFragment extends Fragment {
 
         followBtn = (Button) view.findViewById(R.id.btnFollow);
         volunteerBtn = (Button) view.findViewById(R.id.btnVolunteer);
+        postBtn = (Button) view.findViewById(R.id.btnPost);
 
         // Set color of Follow button
         if(missingDetail.isFollowing()) {
@@ -170,6 +176,13 @@ public class SpecificMissingFragment extends Fragment {
             }
         });
 
+        postBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.OnPostClicked(missingDetail);
+            }
+        });
+
         return view;
     }
 
@@ -177,6 +190,11 @@ public class SpecificMissingFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
+        if(context instanceof OnPostClicked) {
+            mCallback = (OnPostClicked) context;
+        } else {
+            throw new ClassCastException(context.toString() +  " must be implementet OnMissingItemClickedListener");
+        }
     }
 
     @Override

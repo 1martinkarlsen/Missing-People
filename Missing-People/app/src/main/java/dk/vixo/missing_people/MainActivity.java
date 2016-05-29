@@ -41,17 +41,19 @@ import java.util.ArrayList;
 
 import dk.vixo.missing_people.control.MissingListAdapter;
 import dk.vixo.missing_people.fragments.MissingListFragment;
+import dk.vixo.missing_people.fragments.PostMissingFragment;
 import dk.vixo.missing_people.fragments.ProfileFragment;
 import dk.vixo.missing_people.fragments.SpecificMissingFragment;
 import dk.vixo.missing_people.model.Missing;
 
 public class MainActivity extends AppCompatActivity
-        implements MissingListFragment.OnMissingItemClickedListener {
+        implements MissingListFragment.OnMissingItemClickedListener, SpecificMissingFragment.OnPostClicked {
 
     // Fragments
     public MissingListFragment missingListFragment;
     public ProfileFragment profileFragment;
     public SpecificMissingFragment specificMissingFragment;
+    public PostMissingFragment postMissingFragment;
 
     //BottomBar buttons
     private ImageButton home;
@@ -194,6 +196,20 @@ public class MainActivity extends AppCompatActivity
 
             specificMissingFragment.setArguments(details);
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, specificMissingFragment).commit();
+        }
+    }
+
+    @Override
+    public void OnPostClicked(Missing itemDetail) {
+        if (findViewById(R.id.frameLayoutFragHolder) != null) {
+            postMissingFragment = new PostMissingFragment();
+            Bundle postInfo = new Bundle();
+
+            postInfo.putLong("MissingId", itemDetail.getId());
+            postInfo.putString("NameOfMissingPerson", itemDetail.getName());
+            postMissingFragment.setArguments(postInfo);
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, postMissingFragment).commit();
         }
     }
 }
