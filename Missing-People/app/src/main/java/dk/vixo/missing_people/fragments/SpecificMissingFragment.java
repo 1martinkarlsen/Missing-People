@@ -300,10 +300,6 @@ public class SpecificMissingFragment extends Fragment {
                     newMissing.setFollowing(missingObj.getBoolean("IsFollowing"));
                     newMissing.setVolunteering(missingObj.getBoolean("IsVolunteering"));
 
-                    Log.v("### MISSING ### ", newMissing.getName().toString());
-                    Log.v("### MISSING ### ", String.valueOf(newMissing.isFollowing()));
-                    Log.v("### MISSING ### ", String.valueOf(newMissing.isVolunteering()));
-
                     missingDetail = newMissing;
 
                     return newMissing;
@@ -321,24 +317,30 @@ public class SpecificMissingFragment extends Fragment {
 
             if(missing != null) {
 
-                // Set followBtn color
-                if(missing.isFollowing()) {
-                    followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                    followBtn.setText("Unfollow");
-                    Toast.makeText(getActivity(), "is following", Toast.LENGTH_SHORT).show();
-                } else {
-                    followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    followBtn.setText("Follow");
-                    Toast.makeText(getActivity(), "is not following", Toast.LENGTH_SHORT).show();
+                if(data.equals("Follow") || data.equals("UnFollow")) {
+                    // Set followBtn color
+                    if (missing.isFollowing()) {
+                        followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                        followBtn.setText("Unfollow");
+                        Toast.makeText(getActivity(), "is following", Toast.LENGTH_SHORT).show();
+                    } else {
+                        followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        followBtn.setText("Follow");
+                        Toast.makeText(getActivity(), "is not following", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
-                // Set volunteerBtn color
-                if(missing.isVolunteering()) {
-                    volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                    volunteerBtn.setText("Unvolunteer");
-                } else {
-                    volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    volunteerBtn.setText("Volunteer");
+                if(data.equals("Volunteer") || data.equals("UnVolunteer")) {
+                    // Set volunteerBtn color
+                    if (missing.isVolunteering()) {
+                        volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                        volunteerBtn.setText("Unvolunteer");
+                        Toast.makeText(getActivity(), "Is volunteering", Toast.LENGTH_SHORT).show();
+                    } else {
+                        volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        volunteerBtn.setText("Volunteer");
+                        Toast.makeText(getActivity(), "Is not volunteering", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
