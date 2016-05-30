@@ -47,7 +47,9 @@ import dk.vixo.missing_people.fragments.SpecificMissingFragment;
 import dk.vixo.missing_people.model.Missing;
 
 public class MainActivity extends AppCompatActivity
-        implements MissingListFragment.OnMissingItemClickedListener, SpecificMissingFragment.OnPostClicked {
+        implements MissingListFragment.OnMissingItemClickedListener,
+        SpecificMissingFragment.OnPostClicked,
+        PostMissingFragment.OnCameraActivityStartListener {
 
     // Fragments
     public MissingListFragment missingListFragment;
@@ -211,5 +213,11 @@ public class MainActivity extends AppCompatActivity
 
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, postMissingFragment).commit();
         }
+    }
+
+    @Override
+    public void StartCameraActivity() {
+        Intent cameraIntent = new Intent(MainActivity.this, CameraActivity.class);
+        startActivity(cameraIntent);
     }
 }

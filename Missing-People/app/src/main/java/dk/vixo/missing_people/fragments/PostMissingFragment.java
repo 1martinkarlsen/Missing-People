@@ -1,21 +1,35 @@
 package dk.vixo.missing_people.fragments;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
+import dk.vixo.missing_people.CameraActivity;
 import dk.vixo.missing_people.MainActivity;
 import dk.vixo.missing_people.R;
 import dk.vixo.missing_people.model.Missing;
 
 public class PostMissingFragment extends Fragment {
 
+    private OnCameraActivityStartListener mCallback;
     private Missing missing;
     private OnFragmentInteractionListener mListener;
+
+    // Request code
+    private int MY_CAMERA = 2;
+
+    public ImageButton cameraBtn;
 
     public PostMissingFragment() {
         // Required empty public constructor
@@ -52,7 +66,23 @@ public class PostMissingFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_post_missing, container, false);
 
+        cameraBtn = (ImageButton) v.findViewById(R.id.imageBtnCamera);
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, MY_CAMERA);
 
+                        return;
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Can't detect any camera on this device.", Toast.LENGTH_SHORT).show();
+                }
+
+                mCallback.StartCameraActivity();
+            }
+        });
 
         return v;
     }
@@ -68,6 +98,11 @@ public class PostMissingFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
+        if(context instanceof OnCameraActivityStartListener) {
+            mCallback = (OnCameraActivityStartListener) context;
+        } else {
+            throw new ClassCastException(context.toString() +  " must be implementet OnMissingItemClickedListener");
+        }
     }
 
     @Override
@@ -89,5 +124,9 @@ public class PostMissingFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public interface OnCameraActivityStartListener {
+        void StartCameraActivity();
     }
 }
