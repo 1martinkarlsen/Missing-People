@@ -161,7 +161,7 @@ public class MissingListFragment extends ListFragment {
             missingArr.clear();
 
             try {
-                URL url = new URL("http://projects-1martinkarlsen.rhcloud.com/Missing_People/api/missing/all");
+                URL url = new URL("http://missing-1martinkarlsen.rhcloud.com/Missing_People/api/missing/all");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
                 SharedPreferences userPref = ((MainActivity) getActivity()).getSharedPreferences("userPref", Context.MODE_PRIVATE);

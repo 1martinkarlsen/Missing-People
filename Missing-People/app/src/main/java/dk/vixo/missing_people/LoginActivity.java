@@ -325,7 +325,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
 
             try {
-                URL url = new URL("http://projects-1martinkarlsen.rhcloud.com/Missing_People/api/user/login");
+                URL url = new URL("http://missing-1martinkarlsen.rhcloud.com/Missing_People/api/user/login");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
                 JSONObject jsonObject = new JSONObject();

@@ -219,7 +219,7 @@ public class SpecificMissingFragment extends Fragment {
             switch (data) {
                 case "Follow":
                     try {
-                        url = new URL("http://projects-1martinkarlsen.rhcloud.com/Missing_People/api/missing/follow");
+                        url = new URL("http://missing-1martinkarlsen.rhcloud.com/Missing_People/api/missing/follow");
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
@@ -227,7 +227,7 @@ public class SpecificMissingFragment extends Fragment {
 
                 case "UnFollow":
                     try {
-                        url = new URL("http://projects-1martinkarlsen.rhcloud.com/Missing_People/api/missing/unfollow");
+                        url = new URL("http://missing-1martinkarlsen.rhcloud.com/Missing_People/api/missing/unfollow");
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
@@ -235,7 +235,7 @@ public class SpecificMissingFragment extends Fragment {
 
                 case "Volunteer":
                     try {
-                        url = new URL("http://projects-1martinkarlsen.rhcloud.com/Missing_People/api/missing/volunteer");
+                        url = new URL("http://missing-1martinkarlsen.rhcloud.com/Missing_People/api/missing/volunteer");
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
@@ -243,7 +243,7 @@ public class SpecificMissingFragment extends Fragment {
 
                 case "UnVolunteer":
                     try {
-                        url = new URL("http://projects-1martinkarlsen.rhcloud.com/Missing_People/api/missing/unvolunteer");
+                        url = new URL("http://missing-1martinkarlsen.rhcloud.com/Missing_People/api/missing/unvolunteer");
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
