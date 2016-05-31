@@ -4,35 +4,47 @@
     android:layout_height="match_parent"
     tools:context="dk.vixo.missing_people.fragments.PostMissingFragment">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/post_relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ScrollView
-            android:id="@+id/postScrollView"
-            android:layout_width="wrap_content"
+            <ScrollView
+                android:id="@+id/postScrollView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#f6f6f6">
+
+
+                <EditText
+                    android:id="@+id/editTextMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Har du nogle oplysninger?"
+                    android:textSize="16dp"
+                    android:background="#f6f6f6"/>
+            </ScrollView>
+
+            <ImageButton
+                android:id="@+id/imageBtnCamera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/postScrollView"
+                android:background="#f6f6f6"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:src="@android:drawable/ic_menu_camera" />
+
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/postNewsBtn"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#f6f6f6">
-
-
-            <EditText
-                android:id="@+id/editTextMessage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Har du nogle oplysninger?"
-                android:textSize="16dp"
-                android:background="#f6f6f6"/>
-        </ScrollView>
-
-        <ImageButton
-            android:id="@+id/imageBtnCamera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/postScrollView"
-            android:background="#f6f6f6"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="10dp"
-            android:src="@android:drawable/ic_menu_camera" />
-    </RelativeLayout>
+            android:text="Send"
+            android:background="@color/colorPrimary"
+            android:textColor="#ffffff"
+            android:layout_gravity="bottom" />
 
 </FrameLayout>

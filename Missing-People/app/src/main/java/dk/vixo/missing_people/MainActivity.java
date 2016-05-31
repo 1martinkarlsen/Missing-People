@@ -63,9 +63,13 @@ public class MainActivity extends AppCompatActivity
     private ImageButton phone;
 
     //Permission int
-    private int MY_CALL_PHONE = 1;
+    public static final int MY_CALL_PHONE = 1;
+    public static final int CAMERA_TAKE_PIC = 3;
+    public static final int CAMERA_ACCEPT_INT = 4;
 
     ArrayList<Missing> missingArr = new ArrayList<Missing>();
+
+    public byte[] newsImageToUpload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,9 +219,49 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+    /*
+    *
+    *   START OF POST MISSING FRAGMENT INTERFACE METHODS.
+    *
+     */
+
     @Override
     public void StartCameraActivity() {
         Intent cameraIntent = new Intent(MainActivity.this, CameraActivity.class);
-        startActivity(cameraIntent);
+        startActivityForResult(cameraIntent, CAMERA_TAKE_PIC);
+    }
+
+    @Override
+    public void PostMissingNews(String message) {
+
+    }
+    /* END OF POST MISSING FRAGMENT INTERFACE METHODS */
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == CAMERA_TAKE_PIC) {
+            if(resultCode == RESULT_OK) {
+                Bundle b = data.getExtras();
+                byte[] imgArr = b.getByteArray("ImageByteArr");
+
+                Intent pictureAcceptence = new Intent(MainActivity.this, PictureAcceptActivity.class);
+                pictureAcceptence.putExtra("Picture", imgArr);
+                Log.v("MAIN", "Starting PictureAcceptActivity");
+                startActivityForResult(pictureAcceptence, CAMERA_ACCEPT_INT);
+            }
+        }
+        if(requestCode == CAMERA_ACCEPT_INT) {
+            if(resultCode == RESULT_OK) {
+                Log.v("RESULT", "" + resultCode);
+                Bundle b = data.getExtras();
+                newsImageToUpload = b.getByteArray("ImageToUpload");
+            }
+            if(resultCode == RESULT_CANCELED) {
+                StartCameraActivity();
+            }
+        }
     }
 }

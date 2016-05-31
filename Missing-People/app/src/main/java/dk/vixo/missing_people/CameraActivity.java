@@ -1,6 +1,10 @@
 package dk.vixo.missing_people;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Environment;
@@ -20,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import dk.vixo.missing_people.control.CameraPreview;
+import dk.vixo.missing_people.control.ImageScaler;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -34,20 +39,37 @@ public class CameraActivity extends AppCompatActivity {
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            File file = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-            if(file == null) {
+            Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+            if(data == null) {
                 return;
             }
 
-            try {
-                FileOutputStream fos = new FileOutputStream(file);
-                fos.write(data);
-                fos.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+
+            releaseCamera();
+            //Intent pictureAcceptence = new Intent(CameraActivity.this, PictureAcceptActivity.class);
+            //pictureAcceptence.putExtra("Picture", data);
+            //startActivity(pictureAcceptence);
+            //finish();
+
+            Intent intentData = new Intent();
+            intentData.putExtra("ImageByteArr", data);
+            setResult(RESULT_OK, intentData);
+            Log.v("END CAMERA", "hej hej");
+            finish();
+
+
+
+//            try {
+//                FileOutputStream fos = new FileOutputStream(file);
+//                fos.write(data);
+//                fos.close();
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
     };
 
@@ -65,17 +87,11 @@ public class CameraActivity extends AppCompatActivity {
         captureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //camera.takePicture(null, null, pictureCallback);
                 camera.takePicture(null, null, pictureCallback);
                 Toast.makeText(CameraActivity.this, "Picture taken!", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        releaseCamera();
     }
 
     @Override
@@ -101,8 +117,10 @@ public class CameraActivity extends AppCompatActivity {
         if(camera != null) {
             Log.v("CAMERA", "Releasing");
             camera.setPreviewCallback(null);
+            camera.stopPreview();
             cameraPreview.getHolder().removeCallback(cameraPreview);
             camera.release();
+            camera = null;
         }
     }
 
@@ -113,8 +131,12 @@ public class CameraActivity extends AppCompatActivity {
     private static File getOutputMediaFile(int type) {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MissingPeople");
 
+        Log.v("SD CARD", Environment.getExternalStorageState());
+        Log.v("SD CARD", mediaStorageDir.getPath());
+
         if(!mediaStorageDir.exists()) {
             if(!mediaStorageDir.mkdirs()) {
+                Log.v("MEDIASTORAGE", "Oops!");
                 return null;
             }
         }
@@ -125,7 +147,9 @@ public class CameraActivity extends AppCompatActivity {
 
         if(type == MEDIA_TYPE_IMAGE) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator + timeStamp + ".jpg");
+            Log.d("here", "WORKS!");
         } else {
+            Log.d("here", "else.. !media_type_image");
             return null;
         }
 

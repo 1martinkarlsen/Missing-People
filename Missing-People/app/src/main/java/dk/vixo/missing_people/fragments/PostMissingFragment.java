@@ -9,9 +9,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -25,6 +28,9 @@ public class PostMissingFragment extends Fragment {
     private OnCameraActivityStartListener mCallback;
     private Missing missing;
     private OnFragmentInteractionListener mListener;
+
+    private Button postBtn;
+    private EditText editText;
 
     // Request code
     private int MY_CAMERA = 2;
@@ -66,6 +72,8 @@ public class PostMissingFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_post_missing, container, false);
 
+        postBtn = (Button) v.findViewById(R.id.postNewsBtn);
+        editText = (EditText) v.findViewById(R.id.editTextMessage);
         cameraBtn = (ImageButton) v.findViewById(R.id.imageBtnCamera);
         cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +89,17 @@ public class PostMissingFragment extends Fragment {
                 }
 
                 mCallback.StartCameraActivity();
+            }
+        });
+
+        postBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(editText.getText().equals("")) {
+                   return;
+                } else {
+                    mCallback.PostMissingNews(editText.getText().toString());
+                }
             }
         });
 
@@ -128,5 +147,6 @@ public class PostMissingFragment extends Fragment {
 
     public interface OnCameraActivityStartListener {
         void StartCameraActivity();
+        void PostMissingNews(String text);
     }
 }

@@ -2,6 +2,8 @@ package dk.vixo.missing_people.control;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.util.Log;
 
 /**
  * Created by Vixo on 21-05-2016.
@@ -38,8 +40,23 @@ public class ImageScaler {
         return BitmapFactory.decodeByteArray(imgArr, 0, imgArr.length);
     }
 
-    public static Bitmap scaleToListView(Bitmap image) {
-        return null;
+    public static Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+
+        Log.v("NEW SCALED", bm.getWidth() + " " + bm.getHeight());
+        return resizedBitmap;
     }
 
 }

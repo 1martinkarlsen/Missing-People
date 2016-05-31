@@ -37,11 +37,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
         if(holder.getSurface() == null) {
             return;
         }
@@ -59,5 +54,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+
     }
 }
