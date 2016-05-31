@@ -3,6 +3,7 @@ package facade;
 import control.DbConnecter;
 import entity.Missing;
 import entity.Photo;
+import entity.SearchNews;
 import entity.User;
 import exception.UnknownServerException;
 import java.util.ArrayList;
@@ -207,6 +208,36 @@ public class MissingPeopleFacade {
             
         } catch (Exception e) {
             throw new UnknownServerException(e.getMessage());
+        }
+        
+        return false;
+    }
+    
+    public boolean postMissingNews(User user, String missing, String message, byte[] imgArr) throws UnknownServerException {
+        em = emf.createEntityManager();
+        
+        // Get missing
+        Missing missingToPost = getMissing(Long.parseLong(missing));
+        
+        SearchNews newPost = new SearchNews();
+        Photo photo = new Photo();
+        photo.setImg(imgArr);
+        newPost.setUserPosted(user);
+        newPost.setSearch(missingToPost);
+        newPost.setDescription(message);
+        newPost.setPhotos(photo);
+        
+        try {
+            em.getTransaction().begin();
+            em.persist(photo);
+            em.persist(newPost);
+            em.getTransaction().commit();
+            
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            em.close();
         }
         
         return false;

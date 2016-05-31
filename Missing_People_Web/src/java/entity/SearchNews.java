@@ -20,7 +20,7 @@ public class SearchNews implements Serializable {
     @ManyToOne
     private User userPosted;
     private String description;
-    private List<Photo> photos;
+    private Photo photos;
     private String geoPosition;
 
     public SearchNews() {
@@ -58,11 +58,11 @@ public class SearchNews implements Serializable {
         this.description = description;
     }
 
-    public List<Photo> getPhotos() {
+    public Photo getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<Photo> photos) {
+    public void setPhotos(Photo photos) {
         this.photos = photos;
     }
 

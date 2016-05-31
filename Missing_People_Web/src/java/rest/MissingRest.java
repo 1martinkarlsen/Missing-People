@@ -270,4 +270,33 @@ public class MissingRest {
         
         return Response.ok(gson.toJson(response), MediaType.APPLICATION_JSON).build();
     }
+    
+    // REST for users to post news about a Missing
+    @POST
+    @Produces("application/json")
+    @Consumes("application/json")
+    @Path("/postNews")
+    public Response newsPostMissing(String content) throws UnknownServerException {
+        JsonObject json = new JsonParser().parse(content).getAsJsonObject();
+        String userId = json.get("Id").getAsString(); // User Id of person, posting this.
+        String missingId = json.get("MissingId").getAsString(); // Missing Id of Missing that post has to be connected to.
+        String message = json.get("Message").getAsString(); // Message that user has posted.
+        String[] imgStr = json.get("ImageArr").toString().split(","); 
+        byte[] imgByteArr = null;
+        if(imgStr.length > 1) {
+            imgByteArr = Base64.decodeBase64(imgStr[1]); // Image as byte array, that user might have posted.
+        }
+        
+        if(message.equals("") || message == null) {
+            throw new UnknownServerException("There's no message");
+        }
+        
+        User userToPost = userFacade.getUser(Long.parseLong(userId));
+        boolean isPosted = mpFacade.postMissingNews(userToPost, missingId, message, imgByteArr);
+        
+        JsonObject response = new JsonObject();
+        response.addProperty("IsPosted", isPosted);
+        
+        return Response.ok(gson.toJson(response), MediaType.APPLICATION_JSON).build();
+    }
 }
