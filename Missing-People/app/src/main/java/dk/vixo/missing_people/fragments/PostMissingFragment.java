@@ -98,7 +98,7 @@ public class PostMissingFragment extends Fragment {
                 if(editText.getText().equals("")) {
                    return;
                 } else {
-                    mCallback.PostMissingNews(editText.getText().toString());
+                    mCallback.PostMissingNews(editText.getText().toString(), "" + missing.getId());
                 }
             }
         });
@@ -147,6 +147,6 @@ public class PostMissingFragment extends Fragment {
 
     public interface OnCameraActivityStartListener {
         void StartCameraActivity();
-        void PostMissingNews(String text);
+        void PostMissingNews(String text, String missingId);
     }
 }

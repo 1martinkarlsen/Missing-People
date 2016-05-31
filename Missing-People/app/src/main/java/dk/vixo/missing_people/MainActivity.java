@@ -40,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import dk.vixo.missing_people.control.MissingListAdapter;
+import dk.vixo.missing_people.control.PostMissingNewsThread;
 import dk.vixo.missing_people.fragments.MissingListFragment;
 import dk.vixo.missing_people.fragments.PostMissingFragment;
 import dk.vixo.missing_people.fragments.ProfileFragment;
@@ -233,8 +234,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void PostMissingNews(String message) {
-
+    public void PostMissingNews(String message, String missingId) {
+        new PostMissingNewsThread(this, missingId, newsImageToUpload, message).execute();
     }
     /* END OF POST MISSING FRAGMENT INTERFACE METHODS */
 
