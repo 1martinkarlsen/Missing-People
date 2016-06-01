@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import entity.Missing;
 import entity.Photo;
+import entity.SearchNews;
 import entity.User;
 import exception.UnknownServerException;
 import facade.MissingPeopleFacade;
@@ -298,6 +299,45 @@ public class MissingRest {
         
         JsonObject response = new JsonObject();
         response.addProperty("IsPosted", isPosted);
+        
+        return Response.ok(gson.toJson(response), MediaType.APPLICATION_JSON).build();
+    }
+    
+    // REST for all news for a specific Missing.
+    @POST
+    @Produces("application/json")
+    @Consumes("application/json")
+    @Path("/allMissingNews")
+    public Response newsForSpecificMissing(String content) throws UnknownServerException {
+        JsonObject json = new JsonParser().parse(content).getAsJsonObject();
+        String missingId = json.get("MissingId").getAsString();
+        
+        List<SearchNews> newsList = mpFacade.getAllNewsForSpecificMissing(missingId);
+        JsonObject response = new JsonObject();
+        JsonArray jsonArr = new JsonArray();
+        for(SearchNews news : newsList) {
+            JsonObject singleNews = new JsonObject();
+            JsonObject user = new JsonObject();
+            singleNews.addProperty("Id", news.getId());
+                user.addProperty("Id", news.getUserPosted().getId());
+                user.addProperty("Firstname", news.getUserPosted().getFirstname());
+                user.addProperty("Lastname", news.getUserPosted().getLastname());
+            singleNews.add("User", user);
+            singleNews.addProperty("Description", news.getDescription());
+            String photo = "";
+            if(news.getPhotos().getImg() != null) {
+                photo = Base64.encodeBase64String(news.getPhotos().getImg());
+            }
+            singleNews.addProperty("Photo", photo);
+            String geoPos = "";
+            if(news.getGeoPosition() != null) {
+                geoPos = news.getGeoPosition();
+            }
+            singleNews.addProperty("GeoPosition", geoPos);
+            
+            jsonArr.add(singleNews);
+        }
+        response.add("News", jsonArr);
         
         return Response.ok(gson.toJson(response), MediaType.APPLICATION_JSON).build();
     }

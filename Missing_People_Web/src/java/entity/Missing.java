@@ -122,6 +122,4 @@ public class Missing implements Serializable {
         volunteers.add(volunteer);
     }
     
-    
-    
 }

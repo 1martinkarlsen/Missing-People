@@ -242,4 +242,21 @@ public class MissingPeopleFacade {
         
         return false;
     }
+    
+    public List<SearchNews> getAllNewsForSpecificMissing(String missingId) throws UnknownServerException {
+        em = emf.createEntityManager();
+        
+        Missing missing = getMissing(Long.parseLong(missingId));
+        List<SearchNews> newsList = new ArrayList();
+        
+        try {
+            Query query = em.createQuery("SELECT n FROM SearchNews n WHERE n.search = :searchId");
+            query.setParameter("searchId", missing);
+            newsList = query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return newsList;
+    }
 }

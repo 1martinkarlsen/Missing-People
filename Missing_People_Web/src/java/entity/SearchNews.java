@@ -16,6 +16,7 @@ public class SearchNews implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @ManyToOne
     private Missing search;
     @ManyToOne
     private User userPosted;

@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -49,6 +50,8 @@ public class User implements Serializable {
     @JoinTable(name = "mp_volunteers", joinColumns = {
     @JoinColumn(name = "id", referencedColumnName = "id")})
     private List<Missing> volunteering = new ArrayList();
+    @OneToMany
+    private List<SearchNews> news = new ArrayList();
     
     public User() {
         
