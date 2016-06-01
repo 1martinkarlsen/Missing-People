@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,12 +18,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,12 +40,16 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import dk.vixo.missing_people.MainActivity;
 import dk.vixo.missing_people.R;
 import dk.vixo.missing_people.control.ImageScaler;
+import dk.vixo.missing_people.control.MissingNewsAdapter;
 import dk.vixo.missing_people.model.Missing;
+import dk.vixo.missing_people.model.SearchNews;
 import dk.vixo.missing_people.model.User;
 
 public class SpecificMissingFragment extends Fragment {
@@ -57,9 +65,11 @@ public class SpecificMissingFragment extends Fragment {
     Button followBtn;
     Button volunteerBtn;
     Button postBtn;
+    Button loadNewsBtn;
 
     public interface OnPostClicked {
         public void OnPostClicked(Missing itemDetail);
+        public void NewsFragment(Missing itemDetail);
     }
 
     public SpecificMissingFragment() {
@@ -90,6 +100,8 @@ public class SpecificMissingFragment extends Fragment {
         missingDetail.setId((int) bundle.getLong("Id"));
         missingDetail.setName(bundle.getString("NameOfMissingPerson"));
         missingDetail.setDescription(bundle.getString("Description"));
+
+
 
 //        // Converting date
 //        DateFormat format = new SimpleDateFormat("dd-mm-yyyy");
@@ -134,6 +146,7 @@ public class SpecificMissingFragment extends Fragment {
         followBtn = (Button) view.findViewById(R.id.btnFollow);
         volunteerBtn = (Button) view.findViewById(R.id.btnVolunteer);
         postBtn = (Button) view.findViewById(R.id.btnPost);
+        loadNewsBtn = (Button) view.findViewById(R.id.loadNewsBtn);
 
         // Set color of Follow button
         if(missingDetail.isFollowing()) {
@@ -180,6 +193,13 @@ public class SpecificMissingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mCallback.OnPostClicked(missingDetail);
+            }
+        });
+
+        loadNewsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.NewsFragment(missingDetail);
             }
         });
 

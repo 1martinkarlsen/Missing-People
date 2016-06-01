@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import dk.vixo.missing_people.control.MissingListAdapter;
 import dk.vixo.missing_people.control.PostMissingNewsThread;
 import dk.vixo.missing_people.fragments.MissingListFragment;
+import dk.vixo.missing_people.fragments.MissingNewsFragment;
 import dk.vixo.missing_people.fragments.PostMissingFragment;
 import dk.vixo.missing_people.fragments.ProfileFragment;
 import dk.vixo.missing_people.fragments.SpecificMissingFragment;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     public ProfileFragment profileFragment;
     public SpecificMissingFragment specificMissingFragment;
     public PostMissingFragment postMissingFragment;
+    public MissingNewsFragment newsFragment;
 
     //BottomBar buttons
     private ImageButton home;
@@ -217,6 +219,19 @@ public class MainActivity extends AppCompatActivity
             postMissingFragment.setArguments(postInfo);
 
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, postMissingFragment).commit();
+        }
+    }
+
+    @Override
+    public void NewsFragment(Missing itemDetail) {
+        if(findViewById(R.id.frameLayoutFragHolder) != null) {
+            newsFragment = new MissingNewsFragment();
+            Bundle b = new Bundle();
+
+            b.putLong("MissingId", itemDetail.getId());
+            newsFragment.setArguments(b);
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, newsFragment).commit();
         }
     }
 
