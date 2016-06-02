@@ -51,6 +51,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.vixo.missing_people.control.Spinner;
 import dk.vixo.missing_people.model.User;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -69,6 +70,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+
+    //gets the spinner class
+    Spinner spinner = new Spinner();
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -198,7 +202,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
+            spinner.showProgress(true, mLoginFormView, mProgressView);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
@@ -214,41 +218,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return password.length() > 3;
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -352,13 +321,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 String inputLine;
                 StringBuffer response = new StringBuffer();
 
-                while((inputLine = br.readLine()) != null) {
+                while ((inputLine = br.readLine()) != null) {
                     response.append(inputLine);
                 }
 
                 br.close();
 
-                if(responseCode == 200) {
+                if (responseCode == 200) {
                     JSONObject newUser = new JSONObject(response.toString());
 
                     JsonElement json = new JsonParser().parse(response.toString());
@@ -394,12 +363,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
+            spinner.showProgress(false, mLoginFormView, mProgressView);
 
             if (success) {
                 SharedPreferences userPref = getSharedPreferences("userPref", Context.MODE_PRIVATE);
                 Intent loginIntent;
-                if(userPref.getBoolean("isBanned", false)) {
+                if (userPref.getBoolean("isBanned", false)) {
                     loginIntent = new Intent(LoginActivity.this, BannedActivity.class);
                 } else {
                     loginIntent = new Intent(LoginActivity.this, MainActivity.class);
@@ -416,7 +385,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-            showProgress(false);
+            spinner.showProgress(false, mLoginFormView, mProgressView);
         }
     }
 }

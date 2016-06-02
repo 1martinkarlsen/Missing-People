@@ -1,5 +1,8 @@
 package dk.vixo.missing_people.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -9,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
@@ -16,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -36,6 +41,7 @@ import dk.vixo.missing_people.MainActivity;
 import dk.vixo.missing_people.R;
 import dk.vixo.missing_people.control.ImageScaler;
 import dk.vixo.missing_people.control.MissingNewsAdapter;
+import dk.vixo.missing_people.control.Spinner;
 import dk.vixo.missing_people.model.Missing;
 import dk.vixo.missing_people.model.SearchNews;
 import dk.vixo.missing_people.model.User;
@@ -47,7 +53,11 @@ public class MissingNewsFragment extends Fragment {
     MissingNewsAdapter newsAdapter;
     Missing missingDetail;
 
+    //Gets the spinner class
+    Spinner spinner = new Spinner();
+
     ListView listView;
+    View loadNewsView;
 
     ArrayList<SearchNews> newsList = new ArrayList();
 
@@ -81,6 +91,7 @@ public class MissingNewsFragment extends Fragment {
 
         listView = (ListView) v.findViewById(R.id.missingNewsList);
         listView.setAdapter(newsAdapter);
+        loadNewsView = (View) v.findViewById(R.id.loadNewsProg);
 
         return v;
     }
@@ -117,6 +128,49 @@ public class MissingNewsFragment extends Fragment {
     }
 
     public class FetchNews extends AsyncTask<String, String, String> {
+
+
+//        private void showProgress(final boolean show) {
+//            // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+//            // for very easy animations. If available, use these APIs to fade-in
+//            // the progress spinner.
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+//                int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+//
+//                listView.setVisibility(show ? View.GONE : View.VISIBLE);
+//                listView.animate().setDuration(shortAnimTime).alpha(
+//                        show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        listView.setVisibility(show ? View.GONE : View.VISIBLE);
+//                    }
+//                });
+//
+//                loadNewsView.setVisibility(show ? View.VISIBLE : View.GONE);
+//                loadNewsView.animate().setDuration(shortAnimTime).alpha(
+//                        show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        loadNewsView.setVisibility(show ? View.VISIBLE : View.GONE);
+//                    }
+//                });
+//            } else {
+//                // The ViewPropertyAnimator APIs are not available, so simply show
+//                // and hide the relevant UI components.
+//                loadNewsView.setVisibility(show ? View.VISIBLE : View.GONE);
+//                listView.setVisibility(show ? View.GONE : View.VISIBLE);
+//            }
+//        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+
+            spinner.showProgress(true, listView, loadNewsView);
+
+        }
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").setPrettyPrinting().create();
 
@@ -203,6 +257,7 @@ public class MissingNewsFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            spinner.showProgress(false, listView, loadNewsView);
 
             newsAdapter.SetNewsList(newsList);
             newsAdapter.notifyDataSetChanged();
