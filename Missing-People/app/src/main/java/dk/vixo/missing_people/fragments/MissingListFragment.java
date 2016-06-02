@@ -82,7 +82,7 @@ public class MissingListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
 
-        new LoadAllMissingPeopleTask().execute();
+        mCallback.onMissingListUpdate();
     }
 
     @Override
@@ -128,7 +128,17 @@ public class MissingListFragment extends ListFragment {
         mListener = null;
     }
 
+    public void updateAdapter(ArrayList<Missing> newList) {
+        missingArr.clear();
+        for(Missing sing : newList) {
+            missingArr.add(sing);
+        }
+        missingListAdapter.SetMissingList(missingArr);
+        missingListAdapter.notifyDataSetChanged();
+    }
+
     public interface OnMissingItemClickedListener {
+        public void onMissingListUpdate();
         public void onMissingSelected(int position, Missing itemDetail);
     }
 
@@ -145,106 +155,5 @@ public class MissingListFragment extends ListFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    public class LoadAllMissingPeopleTask extends AsyncTask<String, String, Boolean> {
-
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").setPrettyPrinting().create();
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-            missingArr.clear();
-
-            try {
-                URL url = new URL("http://missing-1martinkarlsen.rhcloud.com/Missing_People/api/missing/all");
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-                SharedPreferences userPref = ((MainActivity) getActivity()).getSharedPreferences("userPref", Context.MODE_PRIVATE);
-                User myUser = gson.fromJson(userPref.getString("User", null), User.class);
-
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.accumulate("id", myUser.getId());
-
-                urlConnection.setReadTimeout(10000);
-                urlConnection.setConnectTimeout(15000);
-                urlConnection.setChunkedStreamingMode(0);
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setDoInput(true);
-                urlConnection.setDoOutput(true);
-                urlConnection.addRequestProperty("Accept", "application/json");
-                urlConnection.addRequestProperty("Content-Type", "application/json");
-
-                DataOutputStream out = new DataOutputStream(urlConnection.getOutputStream());
-                out.writeBytes(jsonObject.toString());
-                out.flush();
-                out.close();
-
-                int responseCode = urlConnection.getResponseCode();
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-
-                while((inputLine = br.readLine()) != null) {
-                    response.append(inputLine);
-                }
-
-                br.close();
-
-                if(responseCode == 200) {
-                    JSONArray missingList = new JSONArray(response.toString());
-
-                    for(int i = 0; i < missingList.length(); i++) {
-                        Missing singlePerson = new Missing(missingList.getJSONObject(i));
-
-//                        // Fixing date
-//                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy");
-//                        Date newDate = dateFormat.parse(missingList.getJSONObject(i).getString("DateOfMissing"));
-//                        singlePerson.setDateOfMissing(newDate);
-
-                        // Fixing image
-                        String imgStr  = missingList.getJSONObject(i).getString("Photo");
-                        byte[] imgArr = Base64.decode(imgStr, Base64.DEFAULT);
-                        //Bitmap bitmap = BitmapFactory.decodeByteArray(imgArr, 0, imgArr.length);
-
-                        singlePerson.setPhotoOfMissingPerson(ImageScaler.decodeSampleBitmapFromByteArray(imgArr, 100, 100));
-                        singlePerson.setFollowing(missingList.getJSONObject(i).getBoolean("IsFollowing"));
-                        singlePerson.setVolunteering(missingList.getJSONObject(i).getBoolean("IsVolunteering"));
-
-                        missingArr.add(singlePerson);
-                    }
-
-                    Log.v("### START MISSING LIST", "###");
-                    for(int y = 0; y < missingArr.size(); y++) {
-                        Log.v("### MISSING -> ", missingArr.get(y).getName());
-                    }
-
-                    return true;
-                }
-                //Thread.sleep(2000);
-            } catch (java.io.IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return false;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean s) {
-            super.onPostExecute(s);
-
-            if(s) {
-                //Log.v("### NOTIFYING ###", "###");
-                missingListAdapter.SetMissingList(missingArr);
-                missingListAdapter.notifyDataSetChanged();
-            }
-        }
     }
 }
