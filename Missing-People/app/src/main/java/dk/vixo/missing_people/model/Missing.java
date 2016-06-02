@@ -17,6 +17,7 @@ public class Missing {
     public String description;
     public Date dateOfMissing;
     public Bitmap photoOfMissingPerson;
+    public String geoPosition;
     public boolean following;
     public boolean volunteering;
 
@@ -100,5 +101,13 @@ public class Missing {
 
     public void setVolunteering(boolean volunteering) {
         this.volunteering = volunteering;
+    }
+
+    public String getGeoPosition() {
+        return geoPosition;
+    }
+
+    public void setGeoPosition(String geoPosition) {
+        this.geoPosition = geoPosition;
     }
 }

@@ -59,6 +59,7 @@ import dk.vixo.missing_people.model.User;
 
 public class MainActivity extends AppCompatActivity
         implements MissingListFragment.OnMissingItemClickedListener,
+        MapsFragment.OnMapsInterationListener,
         SpecificMissingFragment.OnPostClicked,
         PostMissingFragment.OnCameraActivityStartListener {
 
@@ -304,6 +305,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onMissingMapsUpdate() {
+        new LoadAllMissingPeopleTask("Maps").execute();
+    }
+
     public class LoadAllMissingPeopleTask extends AsyncTask<String, String, Boolean> {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").setPrettyPrinting().create();
@@ -408,10 +414,10 @@ public class MainActivity extends AppCompatActivity
                 //missingListAdapter.notifyDataSetChanged();
 
                 if(fragmentToUpdate.equals("List")) {
-                    Log.v("WORK", "PLEASE");
                     missingListFragment.updateAdapter(missingArr);
-                } else {
-
+                }
+                if (fragmentToUpdate.equals("Maps")) {
+                    mapsFragment.updateMap(missingArr);
                 }
             }
         }

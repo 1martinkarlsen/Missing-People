@@ -10,19 +10,26 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 import dk.vixo.missing_people.R;
+import dk.vixo.missing_people.model.Missing;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private OnFragmentInteractionListener mListener;
     private GoogleMap gMap;
 
+    ArrayList<Missing> missingArr = new ArrayList<Missing>();
+
     public MapsFragment() {
         // Required empty public constructor
     }
 
-    public static MapsFragment newInstance(String param1, String param2) {
+    public static MapsFragment newInstance() {
         MapsFragment fragment = new MapsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -76,6 +83,33 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         gMap.getUiSettings().setCompassEnabled(true);
     }
 
+    public void updateMap(ArrayList<Missing> newList) {
+        missingArr.clear();
+        for(Missing single : newList) {
+            missingArr.add(single);
+        }
+
+
+    }
+
+    public void addMarkers() {
+        gMap.clear();
+
+        for(Missing single : missingArr) {
+            if(!single.getGeoPosition().equals("")) {
+                String[] latlng = single.getGeoPosition().split(",");
+                int lat = Integer.parseInt(latlng[0]);
+                int lng = Integer.parseInt(latlng[1]);
+                gMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)));
+            } else {
+                gMap.addMarker(new MarkerOptions().position(new LatLng(55.66980, 12.57003)).title("Der er ikke oplyst position"));
+            }
+        }
+    }
+
+    public interface OnMapsInterationListener {
+        public void onMissingMapsUpdate();
+    }
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
