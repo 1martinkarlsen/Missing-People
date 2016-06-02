@@ -1,7 +1,6 @@
 package dk.vixo.missing_people;
 
 import android.Manifest;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,12 +8,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.app.LoaderManager;
-import android.content.Loader;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
@@ -22,13 +18,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.MapFragment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -42,11 +35,9 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import dk.vixo.missing_people.control.ImageScaler;
-import dk.vixo.missing_people.control.MissingListAdapter;
 import dk.vixo.missing_people.control.PostMissingNewsThread;
 import dk.vixo.missing_people.fragments.MapsFragment;
 import dk.vixo.missing_people.fragments.MissingListFragment;
@@ -59,9 +50,11 @@ import dk.vixo.missing_people.model.User;
 
 public class MainActivity extends AppCompatActivity
         implements MissingListFragment.OnMissingItemClickedListener,
-        MapsFragment.OnMapsInterationListener,
+        MapsFragment.OnMapsFragmentListener,
         SpecificMissingFragment.OnPostClicked,
         PostMissingFragment.OnCameraActivityStartListener {
+
+    public static FragmentManager fragmentManager;
 
     // Fragments
     public MissingListFragment missingListFragment;
@@ -99,18 +92,25 @@ public class MainActivity extends AppCompatActivity
         maps = (ImageButton) findViewById(R.id.mapsBtn);
         phone = (ImageButton) findViewById(R.id.phoneBtn);
 
+        // Fragmentmanager
+        fragmentManager = getSupportFragmentManager();
+
         //Home
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, missingListFragment).commit();
-                Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
+                if(findViewById(R.id.frameLayoutFragHolder) != null) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, missingListFragment).commit();
+                    Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         //Maps
         maps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mapsFragment = new MapsFragment();
+
                 getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, mapsFragment).commit();
                 Toast.makeText(MainActivity.this, "Maps", Toast.LENGTH_SHORT).show();
             }
@@ -277,6 +277,8 @@ public class MainActivity extends AppCompatActivity
     }
     /* END OF POST MISSING FRAGMENT INTERFACE METHODS */
 
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -288,15 +290,12 @@ public class MainActivity extends AppCompatActivity
 
                 Intent pictureAcceptence = new Intent(MainActivity.this, PictureAcceptActivity.class);
                 pictureAcceptence.putExtra("Picture", imgArr);
-                Log.v("MAIN", "Starting PictureAcceptActivity");
                 startActivityForResult(pictureAcceptence, CAMERA_ACCEPT_INT);
             }
         }
         if(requestCode == CAMERA_ACCEPT_INT) {
             if(resultCode == RESULT_OK) {
-                Log.v("RESULT", "" + resultCode);
                 Bundle b = data.getExtras();
-                Log.v("DATA:", "" + b.getByteArray("ImageToUpload"));
                 newsImageToUpload = b.getByteArray("ImageToUpload");
             }
             if(resultCode == RESULT_CANCELED) {
@@ -308,6 +307,34 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMissingMapsUpdate() {
         new LoadAllMissingPeopleTask("Maps").execute();
+    }
+
+    @Override
+    public void onMarkerClicked(Missing missing) {
+        if (findViewById(R.id.frameLayoutFragHolder) != null) {
+            specificMissingFragment = new SpecificMissingFragment();
+            Bundle details = new Bundle();
+
+            // Compressing Bitmap
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            missing.getPhotoOfMissingPerson().compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+//            // Date coverting to string
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy:hh:mm:ss");
+//            String test = dateFormat.format(itemDetail.getDateOfMissing());
+
+            // Setting missing person details
+            details.putLong("Id", missing.getId());
+            details.putString("NameOfMissingPerson", missing.getName());
+            details.putString("Description", missing.getDescription());
+            //details.putString("DateOfMissing", test);
+            details.putByteArray("ImageOfMissingPerson", stream.toByteArray());
+            details.putBoolean("IsFollowing", missing.isFollowing());
+            details.putBoolean("IsVolunteering", missing.isVolunteering());
+
+            specificMissingFragment.setArguments(details);
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, specificMissingFragment).commit();
+        }
     }
 
     public class LoadAllMissingPeopleTask extends AsyncTask<String, String, Boolean> {
@@ -380,16 +407,12 @@ public class MainActivity extends AppCompatActivity
                         byte[] imgArr = Base64.decode(imgStr, Base64.DEFAULT);
                         //Bitmap bitmap = BitmapFactory.decodeByteArray(imgArr, 0, imgArr.length);
 
+                        singlePerson.setGeoPosition(missingList.getJSONObject(i).getString("GeoPosition"));
                         singlePerson.setPhotoOfMissingPerson(ImageScaler.decodeSampleBitmapFromByteArray(imgArr, 100, 100));
                         singlePerson.setFollowing(missingList.getJSONObject(i).getBoolean("IsFollowing"));
                         singlePerson.setVolunteering(missingList.getJSONObject(i).getBoolean("IsVolunteering"));
 
                         missingArr.add(singlePerson);
-                    }
-
-                    Log.v("### START MISSING LIST", "###");
-                    for(int y = 0; y < missingArr.size(); y++) {
-                        Log.v("### MISSING -> ", missingArr.get(y).getName());
                     }
 
                     return true;
