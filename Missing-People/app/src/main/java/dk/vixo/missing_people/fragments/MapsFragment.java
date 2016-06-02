@@ -71,6 +71,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
+
+        gMap.getUiSettings().setZoomControlsEnabled(true);
+        gMap.getUiSettings().setCompassEnabled(true);
     }
 
 
