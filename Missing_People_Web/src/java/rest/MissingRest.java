@@ -282,12 +282,12 @@ public class MissingRest {
         String userId = json.get("Id").getAsString(); // User Id of person, posting this.
         String missingId = json.get("MissingId").getAsString(); // Missing Id of Missing that post has to be connected to.
         String message = json.get("Message").getAsString(); // Message that user has posted.
-        System.out.println(json.get("ImageArr"));
+        
         //String[] imgStr = json.get("ImageArr").toString().split(","); 
         
         byte[] imgByteArr = null;
         if(json.get("ImageArr") != null) {
-            imgByteArr = Base64.decodeBase64(json.get("ImageArr").toString()); // Image as byte array, that user might have posted.
+            imgByteArr = Base64.decodeBase64(json.get("ImageArr").getAsString()); // Image as byte array, that user might have posted.
         }
         
         if(message.equals("") || message == null) {
@@ -324,10 +324,12 @@ public class MissingRest {
                 user.addProperty("Lastname", news.getUserPosted().getLastname());
             singleNews.add("User", user);
             singleNews.addProperty("Description", news.getDescription());
+            
             String photo = "";
             if(news.getPhotos().getImg() != null) {
                 photo = Base64.encodeBase64String(news.getPhotos().getImg());
             }
+            
             singleNews.addProperty("Photo", photo);
             String geoPos = "";
             if(news.getGeoPosition() != null) {
