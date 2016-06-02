@@ -42,17 +42,18 @@ public class PictureAcceptActivity extends AppCompatActivity {
         acceptBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageAsBitmap = ImageScaler.getResizedBitmap(imageAsBitmap, 100, 100);
+                //imageAsBitmap = BitmapFactory.decodeByteArray(imageArr, 0, imageArr.length);
+                //Bitmap newBitmap = ImageScaler.getResizedBitmap(imageAsBitmap, 100, 100);
+                Bitmap newBitmap = BitmapFactory.decodeByteArray(imageArr, 0, imageArr.length);
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                imageAsBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 byte[] byteArray = stream.toByteArray();
 
                 try {
                     Intent dataIntent = new Intent();
                     dataIntent.putExtra("ImageToUpload", byteArray);
                     setResult(RESULT_OK, dataIntent);
-                    Log.v("Test1", "hej");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

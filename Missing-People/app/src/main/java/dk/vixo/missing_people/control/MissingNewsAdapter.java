@@ -3,6 +3,7 @@ package dk.vixo.missing_people.control;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,7 +57,16 @@ public class MissingNewsAdapter extends ArrayAdapter<SearchNews> {
         }
 
         if(news.getPhoto() != null) {
-            viewHolder.image.setImageBitmap(news.getPhoto());
+            Bitmap bm = news.getPhoto();
+            Bitmap scaled = Bitmap.createScaledBitmap(bm, 200, 200, true);
+            int w = scaled.getWidth();
+            int h = scaled.getHeight();
+            // Setting post rotate to 90
+            Matrix mtx = new Matrix();
+            mtx.postRotate(90);
+            // Rotating Bitmap
+            bm = Bitmap.createBitmap(scaled, 0, 0, w, h, mtx, true);
+            viewHolder.image.setImageBitmap(bm);
         } else {
             viewHolder.image.setImageResource(R.mipmap.ic_launcher);
         }

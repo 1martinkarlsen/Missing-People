@@ -273,6 +273,7 @@ public class MainActivity extends AppCompatActivity
             if(resultCode == RESULT_OK) {
                 Log.v("RESULT", "" + resultCode);
                 Bundle b = data.getExtras();
+                Log.v("DATA:", "" + b.getByteArray("ImageToUpload"));
                 newsImageToUpload = b.getByteArray("ImageToUpload");
             }
             if(resultCode == RESULT_CANCELED) {

@@ -51,7 +51,6 @@ public class PostMissingNewsThread extends AsyncTask<String, String, Boolean> {
             SharedPreferences userPref = (context.getApplicationContext().getSharedPreferences("userPref", Context.MODE_PRIVATE));
             User myUser = gson.fromJson(userPref.getString("User", null), User.class);
 
-
             String encodedImg = Base64.encodeToString(imgArr, Base64.DEFAULT);
 
             JSONObject jsonObject = new JSONObject();
@@ -60,10 +59,6 @@ public class PostMissingNewsThread extends AsyncTask<String, String, Boolean> {
             jsonObject.accumulate("Message", message);
             jsonObject.accumulate("ImageArr", encodedImg);
 
-            Log.v("## ID", "" + myUser.getId());
-            Log.v("## MID", "" + missingId);
-            Log.v("## MES", message);
-            Log.v("## IMG", "" + encodedImg);
 
             urlConnection.setReadTimeout(10000);
             urlConnection.setConnectTimeout(15000);

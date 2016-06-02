@@ -26,6 +26,7 @@ import java.util.Date;
 
 import dk.vixo.missing_people.control.CameraPreview;
 import dk.vixo.missing_people.control.ImageScaler;
+import dk.vixo.missing_people.control.PostMissingNewsThread;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -42,7 +43,7 @@ public class CameraActivity extends AppCompatActivity {
         public void onPictureTaken(byte[] data, Camera camera) {
             Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-            Bitmap scaledBm = ImageScaler.getResizedBitmap(bm, 100, 100);
+            Bitmap scaledBm = ImageScaler.getResizedBitmap(bm, 300, 300);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             scaledBm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             byte[] byteArray = stream.toByteArray();

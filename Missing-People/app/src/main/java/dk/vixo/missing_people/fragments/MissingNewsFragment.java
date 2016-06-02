@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 
 import dk.vixo.missing_people.MainActivity;
 import dk.vixo.missing_people.R;
+import dk.vixo.missing_people.control.ImageScaler;
 import dk.vixo.missing_people.control.MissingNewsAdapter;
 import dk.vixo.missing_people.model.Missing;
 import dk.vixo.missing_people.model.SearchNews;
@@ -179,16 +182,13 @@ public class MissingNewsFragment extends Fragment {
                         String imgStr = singleObj.getString("Photo");
                         Bitmap bm = null;
                         if(singleObj.getString("Photo").equals("")) {
-                            Log.v("NOTHING", "TO SHOW");
                             bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
                         } else {
-                            Log.v("WUHUU", "..");
                             byte[] imgArr = Base64.decode(imgStr, Base64.DEFAULT);
                             bm = BitmapFactory.decodeByteArray(imgArr, 0, imgArr.length);
                         }
 
                         singleNews.setPhoto(bm);
-
                         newsList.add(singleNews);
                     }
 
