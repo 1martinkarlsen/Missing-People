@@ -31,4 +31,6 @@
     <string name="ToastVolun">You are now active in this search</string>
     <string name="ToastHome">Home screen</string>
     <string name="ToastMaps">Map</string>
+    <string name="Accept">Accept</string>
+    <string name="Retake">Retake picture</string>
 </resources>

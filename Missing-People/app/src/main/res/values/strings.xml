@@ -39,4 +39,6 @@
     <string name="ToastUnFollow">You are no longer following this search</string>
     <string name="ToastHome">Home</string>
     <string name="ToastMaps">Maps</string>
+    <string name="Accept">Accept</string>
+    <string name="Retake">Retake</string>
 </resources>

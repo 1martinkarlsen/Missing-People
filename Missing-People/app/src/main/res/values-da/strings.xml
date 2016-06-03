@@ -31,4 +31,6 @@
     <string name="ToastVolun">Du er nu aktiv i denne eftersøgning</string>
     <string name="ToastHome">Startside</string>
     <string name="ToastMaps">Kort</string>
+    <string name="Accept">Accepter</string>
+    <string name="Retake">Tag nyt billede</string>
 </resources>

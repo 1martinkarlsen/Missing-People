@@ -31,7 +31,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="0.5"
                 android:background="@color/colorPrimary"
-                android:text="Accepter"
+                android:text="@string/Accept"
                 android:textColor="#ffffff" />
 
             <Button
@@ -42,7 +42,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_weight="0.5"
                 android:background="@color/colorPrimary"
-                android:text="Fortryd"
+                android:text="@string/Retake"
                 android:textColor="#ffffff" />
 
         </LinearLayout>
