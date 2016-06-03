@@ -1,9 +1,7 @@
 package dk.vixo.missing_people.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -54,8 +52,8 @@ public class ProfileFragment extends Fragment {
         ((MainActivity) getActivity()).setActionBarTitle(title);
 
         // Setting user information in TextViews.
-        txtFullName.setText(myUser.getFirstname() + " " + myUser.getLastname());
-        txtEmail.setText(myUser.getEmail());
+        txtFullName.setText(myUser.getFirstname());
+        //txtEmail.setText(myUser.getEmail());
     }
 
     @Override

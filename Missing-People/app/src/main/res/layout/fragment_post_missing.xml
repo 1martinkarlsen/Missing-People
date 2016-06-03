@@ -19,9 +19,9 @@
                 <EditText
                     android:id="@+id/editTextMessage"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Har du nogle oplysninger?"
-                    android:textSize="16dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/Post_text"
+                    android:textSize="16sp"
                     android:background="#f6f6f6"/>
             </ScrollView>
 
@@ -42,7 +42,7 @@
             android:id="@+id/postNewsBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Send"
+            android:text="@string/Send"
             android:background="@color/colorPrimary"
             android:textColor="#ffffff"
             android:layout_gravity="bottom" />

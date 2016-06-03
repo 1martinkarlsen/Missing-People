@@ -18,9 +18,9 @@ public class Spinner {
     //true if the spinner needs to show and false if it does not.
     //First view is the view it should display when the task is done.
     //Second view is the spinner view.
-    public void showProgress(final boolean show, View start, View end) {
-        originView = start;
-        spinnerView = end;
+    public void showProgress(final boolean show, View origin, View spin) {
+        originView = origin;
+        spinnerView = spin;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = 200;

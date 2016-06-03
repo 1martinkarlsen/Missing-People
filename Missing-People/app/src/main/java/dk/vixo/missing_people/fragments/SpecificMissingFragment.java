@@ -4,52 +4,34 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import dk.vixo.missing_people.MainActivity;
 import dk.vixo.missing_people.R;
 import dk.vixo.missing_people.control.ImageScaler;
-import dk.vixo.missing_people.control.MissingNewsAdapter;
 import dk.vixo.missing_people.model.Missing;
-import dk.vixo.missing_people.model.SearchNews;
 import dk.vixo.missing_people.model.User;
 
 public class SpecificMissingFragment extends Fragment {
@@ -151,19 +133,19 @@ public class SpecificMissingFragment extends Fragment {
         // Set color of Follow button
         if(missingDetail.isFollowing()) {
             followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-            followBtn.setText("Unfollow");
+            followBtn.setText(R.string.Unfollow);
         } else {
             followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            followBtn.setText("Follow");
+            followBtn.setText(R.string.Follow);
         }
 
         // Set color of Volunteer button
         if(missingDetail.isVolunteering()) {
             volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-            volunteerBtn.setText("Unvolunteer");
+            volunteerBtn.setText(R.string.UnVolunteer);
         } else {
             volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            volunteerBtn.setText("Volunteer");
+            volunteerBtn.setText(R.string.Volunteer);
         }
 
 
@@ -341,12 +323,12 @@ public class SpecificMissingFragment extends Fragment {
                     // Set followBtn color
                     if (missing.isFollowing()) {
                         followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                        followBtn.setText("Unfollow");
-                        Toast.makeText(getActivity(), "is following", Toast.LENGTH_SHORT).show();
+                        followBtn.setText(R.string.Unfollow);
+                        Toast.makeText(getActivity(), R.string.ToastFollow, Toast.LENGTH_SHORT).show();
                     } else {
                         followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                        followBtn.setText("Follow");
-                        Toast.makeText(getActivity(), "is not following", Toast.LENGTH_SHORT).show();
+                        followBtn.setText(R.string.Follow);
+                        Toast.makeText(getActivity(), R.string.ToastUnFollow, Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -354,12 +336,12 @@ public class SpecificMissingFragment extends Fragment {
                     // Set volunteerBtn color
                     if (missing.isVolunteering()) {
                         volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                        volunteerBtn.setText("Unvolunteer");
-                        Toast.makeText(getActivity(), "Is volunteering", Toast.LENGTH_SHORT).show();
+                        volunteerBtn.setText(R.string.Inactive);
+                        Toast.makeText(getActivity(), R.string.ToastVolun, Toast.LENGTH_SHORT).show();
                     } else {
                         volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                        volunteerBtn.setText("Volunteer");
-                        Toast.makeText(getActivity(), "Is not volunteering", Toast.LENGTH_SHORT).show();
+                        volunteerBtn.setText(R.string.Active);
+                        Toast.makeText(getActivity(), R.string.ToastUnVolun, Toast.LENGTH_SHORT).show();
                     }
                 }
             }

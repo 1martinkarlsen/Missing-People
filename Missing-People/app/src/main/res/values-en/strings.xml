@@ -12,4 +12,23 @@
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="permission_rationale">Contacts permissions are needed for providing email completions.</string>
+    <string name="Description">Description</string>
+    <string name="Follow">Follow</string>
+    <string name="Load_news">Load news</string>
+    <string name="Name">Name</string>
+    <string name="Post">Create news</string>
+    <string name="Post_text">Do you have any information about this person?</string>
+    <string name="Send">Send</string>
+    <string name="TakePic">Take picture</string>
+    <string name="UnVolunteer">Unvolunteer</string>
+    <string name="Unfollow">Unfollow</string>
+    <string name="Volunteer">Volunteer</string>
+    <string name="Active">Active</string>
+    <string name="Inactive">Inactive</string>
+    <string name="ToastFollow">You are now following this search</string>
+    <string name="ToastUnFollow">You are no longer following this search</string>
+    <string name="ToastUnVolun">You are no longer active in this search</string>
+    <string name="ToastVolun">You are now active in this search</string>
+    <string name="ToastHome">Home screen</string>
+    <string name="ToastMaps">Map</string>
 </resources>

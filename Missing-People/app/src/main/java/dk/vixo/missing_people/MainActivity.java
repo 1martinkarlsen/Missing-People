@@ -14,14 +14,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.MapFragment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -101,8 +99,9 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 if(findViewById(R.id.frameLayoutFragHolder) != null) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, missingListFragment).commit();
-                    Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.ToastHome, Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
         //Maps
@@ -112,7 +111,7 @@ public class MainActivity extends AppCompatActivity
                 mapsFragment = new MapsFragment();
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, mapsFragment).commit();
-                Toast.makeText(MainActivity.this, "Maps", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.ToastMaps, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -121,17 +120,13 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
+
+                //Check permission. if !GRANTED - Request Permission.
+                //Number to call
                 callIntent.setData(Uri.parse("tel:70101155"));
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
 
                     ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, MY_CALL_PHONE);
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
                 startActivity(callIntent);
@@ -170,16 +165,16 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_profile) {
-            if (findViewById(R.id.frameLayoutFragHolder) != null) {
-
-                profileFragment = new ProfileFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, profileFragment).commit();
-            }
-        }
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_profile) {
+//            if (findViewById(R.id.frameLayoutFragHolder) != null) {
+//
+//                profileFragment = new ProfileFragment();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, profileFragment).commit();
+//            }
+//        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
         if (id == R.id.action_logout) {
             SharedPreferences userPref = getSharedPreferences("userPref", Context.MODE_PRIVATE);
             SharedPreferences.Editor prefEditor = userPref.edit();
@@ -341,7 +336,6 @@ public class MainActivity extends AppCompatActivity
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").setPrettyPrinting().create();
         String fragmentToUpdate = "";
-
         public LoadAllMissingPeopleTask(String frag) {
             this.fragmentToUpdate = frag;
         }

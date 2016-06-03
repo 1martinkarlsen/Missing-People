@@ -22,7 +22,6 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-import dk.vixo.missing_people.MainActivity;
 import dk.vixo.missing_people.model.User;
 
 public class PostMissingNewsThread extends AsyncTask<String, String, Boolean> {

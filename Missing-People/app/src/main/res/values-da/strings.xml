@@ -12,4 +12,23 @@
     <string name="action_profile">Profil</string>
     <string name="action_about">Om</string>
     <string name="permission_rationale">Kontakt tilladelse mangler </string>
+    <string name="Description">Beskrivelse</string>
+    <string name="Follow">Følg</string>
+    <string name="Load_news">Hent nyheder</string>
+    <string name="Name">Navn</string>
+    <string name="Post">Lav nyhed</string>
+    <string name="Post_text">har du nogle informationer omkring denne person?</string>
+    <string name="Send">Send</string>
+    <string name="TakePic">Tag billed</string>
+    <string name="Volunteer">Aktiv</string>
+    <string name="UnVolunteer">Inaktiv</string>
+    <string name="Unfollow">Stop følge</string>
+    <string name="Active">Aktiv</string>
+    <string name="Inactive">Inaktiv</string>
+    <string name="ToastFollow">Du følger nu denne eftersøgning</string>
+    <string name="ToastUnFollow">Du følger ikke længere denne eftersøgning</string>
+    <string name="ToastUnVolun">Du er ikke længere aktiv i eftersøgningen</string>
+    <string name="ToastVolun">Du er nu aktiv i denne eftersøgning</string>
+    <string name="ToastHome">Startside</string>
+    <string name="ToastMaps">Kort</string>
 </resources>
