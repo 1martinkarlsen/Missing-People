@@ -27,7 +27,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import dk.vixo.missing_people.MainActivity;
 import dk.vixo.missing_people.R;
 import dk.vixo.missing_people.control.MissingNewsAdapter;
 import dk.vixo.missing_people.control.Spinner;
@@ -80,7 +79,7 @@ public class MissingNewsFragment extends Fragment {
 
         listView = (ListView) v.findViewById(R.id.missingNewsList);
         listView.setAdapter(newsAdapter);
-        loadNewsView = (View) v.findViewById(R.id.loadNewsProg);
+        loadNewsView = v.findViewById(R.id.loadNewsProg);
 
         return v;
     }
@@ -136,7 +135,7 @@ public class MissingNewsFragment extends Fragment {
                 URL url = new URL("http://missing-1martinkarlsen.rhcloud.com/Missing_People/api/missing/allMissingNews");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-                SharedPreferences userPref = ((MainActivity) getActivity()).getSharedPreferences("userPref", Context.MODE_PRIVATE);
+                SharedPreferences userPref = getActivity().getSharedPreferences("userPref", Context.MODE_PRIVATE);
                 User myUser = gson.fromJson(userPref.getString("User", null), User.class);
 
                 JSONObject jsonObject = new JSONObject();
@@ -172,7 +171,7 @@ public class MissingNewsFragment extends Fragment {
                     JSONObject json = new JSONObject(response.toString());
                     JSONArray jsonObj = json.getJSONArray("News");
 
-                    for(int i = 0; i < jsonObj.length(); i++) {
+                    for (int i = 0; i < jsonObj.length(); i++) {
                         JSONObject singleObj = jsonObj.getJSONObject(i);
                         JSONObject userObj = singleObj.getJSONObject("User");
                         SearchNews singleNews = new SearchNews();
@@ -188,7 +187,7 @@ public class MissingNewsFragment extends Fragment {
                         // Fixing image
                         String imgStr = singleObj.getString("Photo");
                         Bitmap bm = null;
-                        if(singleObj.getString("Photo").equals("")) {
+                        if (singleObj.getString("Photo").equals("")) {
                             bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
                         } else {
                             byte[] imgArr = Base64.decode(imgStr, Base64.DEFAULT);

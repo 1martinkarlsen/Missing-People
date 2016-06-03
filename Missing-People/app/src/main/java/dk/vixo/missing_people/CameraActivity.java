@@ -1,15 +1,12 @@
 package dk.vixo.missing_people;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.hardware.Camera;
-import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,15 +15,11 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import dk.vixo.missing_people.control.CameraPreview;
 import dk.vixo.missing_people.control.ImageScaler;
-import dk.vixo.missing_people.control.PostMissingNewsThread;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -49,11 +42,9 @@ public class CameraActivity extends AppCompatActivity {
             byte[] byteArray = stream.toByteArray();
 
 
-            if(data == null) {
+            if (data == null) {
                 return;
             }
-
-
 
             releaseCamera();
             //Intent pictureAcceptence = new Intent(CameraActivity.this, PictureAcceptActivity.class);
@@ -64,10 +55,7 @@ public class CameraActivity extends AppCompatActivity {
             Intent intentData = new Intent();
             intentData.putExtra("ImageByteArr", byteArray);
             setResult(RESULT_OK, intentData);
-            Log.v("END CAMERA", "hej hej");
             finish();
-
-
 
 //            try {
 //                FileOutputStream fos = new FileOutputStream(file);
@@ -122,8 +110,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     public void releaseCamera() {
-        if(camera != null) {
-            Log.v("CAMERA", "Releasing");
+        if (camera != null) {
             camera.setPreviewCallback(null);
             camera.stopPreview();
             cameraPreview.getHolder().removeCallback(cameraPreview);
@@ -142,8 +129,8 @@ public class CameraActivity extends AppCompatActivity {
         Log.v("SD CARD", Environment.getExternalStorageState());
         Log.v("SD CARD", mediaStorageDir.getPath());
 
-        if(!mediaStorageDir.exists()) {
-            if(!mediaStorageDir.mkdirs()) {
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
                 Log.v("MEDIASTORAGE", "Oops!");
                 return null;
             }
@@ -153,7 +140,7 @@ public class CameraActivity extends AppCompatActivity {
         String timeStamp = new SimpleDateFormat("ddmmyyyy").format(new Date());
         File mediaFile;
 
-        if(type == MEDIA_TYPE_IMAGE) {
+        if (type == MEDIA_TYPE_IMAGE) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator + timeStamp + ".jpg");
             Log.d("here", "WORKS!");
         } else {

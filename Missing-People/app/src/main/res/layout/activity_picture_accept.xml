@@ -21,29 +21,29 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:orientation="horizontal"
-            android:weightSum="1"
-            android:padding="5dp">
+            android:padding="5dp"
+            android:weightSum="1">
 
             <Button
                 android:id="@+id/acceptBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Accepter"
-                android:textColor="#ffffff"
-                android:background="@color/colorPrimary"
                 android:layout_marginRight="5dp"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.5"
+                android:background="@color/colorPrimary"
+                android:text="Accepter"
+                android:textColor="#ffffff" />
 
             <Button
                 android:id="@+id/cancelBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:text="Fortryd"
-                android:textColor="#ffffff"
-                android:background="@color/colorPrimary"
                 android:layout_marginLeft="5dp"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.5"
+                android:background="@color/colorPrimary"
+                android:text="Fortryd"
+                android:textColor="#ffffff" />
 
         </LinearLayout>
     </FrameLayout>

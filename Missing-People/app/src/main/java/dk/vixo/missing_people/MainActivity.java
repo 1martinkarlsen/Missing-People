@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(findViewById(R.id.frameLayoutFragHolder) != null) {
+                if (findViewById(R.id.frameLayoutFragHolder) != null) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, missingListFragment).commit();
                     Toast.makeText(MainActivity.this, R.string.ToastHome, Toast.LENGTH_SHORT).show();
                 }
@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void NewsFragment(Missing itemDetail) {
-        if(findViewById(R.id.frameLayoutFragHolder) != null) {
+        if (findViewById(R.id.frameLayoutFragHolder) != null) {
             newsFragment = new MissingNewsFragment();
             Bundle b = new Bundle();
 
@@ -252,7 +252,6 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutFragHolder, newsFragment).commit();
         }
     }
-
 
     /*
     *
@@ -272,14 +271,12 @@ public class MainActivity extends AppCompatActivity
     }
     /* END OF POST MISSING FRAGMENT INTERFACE METHODS */
 
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == CAMERA_TAKE_PIC) {
-            if(resultCode == RESULT_OK) {
+        if (requestCode == CAMERA_TAKE_PIC) {
+            if (resultCode == RESULT_OK) {
                 Bundle b = data.getExtras();
                 byte[] imgArr = b.getByteArray("ImageByteArr");
 
@@ -288,12 +285,12 @@ public class MainActivity extends AppCompatActivity
                 startActivityForResult(pictureAcceptence, CAMERA_ACCEPT_INT);
             }
         }
-        if(requestCode == CAMERA_ACCEPT_INT) {
-            if(resultCode == RESULT_OK) {
+        if (requestCode == CAMERA_ACCEPT_INT) {
+            if (resultCode == RESULT_OK) {
                 Bundle b = data.getExtras();
                 newsImageToUpload = b.getByteArray("ImageToUpload");
             }
-            if(resultCode == RESULT_CANCELED) {
+            if (resultCode == RESULT_CANCELED) {
                 StartCameraActivity();
             }
         }
@@ -336,6 +333,7 @@ public class MainActivity extends AppCompatActivity
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").setPrettyPrinting().create();
         String fragmentToUpdate = "";
+
         public LoadAllMissingPeopleTask(String frag) {
             this.fragmentToUpdate = frag;
         }
@@ -379,16 +377,16 @@ public class MainActivity extends AppCompatActivity
                 String inputLine;
                 StringBuffer response = new StringBuffer();
 
-                while((inputLine = br.readLine()) != null) {
+                while ((inputLine = br.readLine()) != null) {
                     response.append(inputLine);
                 }
 
                 br.close();
 
-                if(responseCode == 200) {
+                if (responseCode == 200) {
                     JSONArray missingList = new JSONArray(response.toString());
 
-                    for(int i = 0; i < missingList.length(); i++) {
+                    for (int i = 0; i < missingList.length(); i++) {
                         Missing singlePerson = new Missing(missingList.getJSONObject(i));
 
 //                        // Fixing date
@@ -397,7 +395,7 @@ public class MainActivity extends AppCompatActivity
 //                        singlePerson.setDateOfMissing(newDate);
 
                         // Fixing image
-                        String imgStr  = missingList.getJSONObject(i).getString("Photo");
+                        String imgStr = missingList.getJSONObject(i).getString("Photo");
                         byte[] imgArr = Base64.decode(imgStr, Base64.DEFAULT);
                         //Bitmap bitmap = BitmapFactory.decodeByteArray(imgArr, 0, imgArr.length);
 
@@ -425,12 +423,12 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Boolean s) {
             super.onPostExecute(s);
 
-            if(s) {
+            if (s) {
                 //Log.v("### NOTIFYING ###", "###");
                 //missingListAdapter.SetMissingList(missingArr);
                 //missingListAdapter.notifyDataSetChanged();
 
-                if(fragmentToUpdate.equals("List")) {
+                if (fragmentToUpdate.equals("List")) {
                     missingListFragment.updateAdapter(missingArr);
                 }
                 if (fragmentToUpdate.equals("Maps")) {

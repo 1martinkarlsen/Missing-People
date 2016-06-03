@@ -1,10 +1,6 @@
 package dk.vixo.missing_people.control;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +37,7 @@ public class MissingListAdapter extends ArrayAdapter<Missing> {
 
         ViewHolder viewHolder;
 
-        if(convertView == null) {
+        if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.missinglistrow, parent, false);
@@ -55,7 +50,7 @@ public class MissingListAdapter extends ArrayAdapter<Missing> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        if(missing.getPhotoOfMissingPerson() != null) {
+        if (missing.getPhotoOfMissingPerson() != null) {
             viewHolder.image.setImageBitmap(missing.getPhotoOfMissingPerson());
         } else {
             viewHolder.image.setImageResource(R.mipmap.ic_launcher);

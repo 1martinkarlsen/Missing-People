@@ -2,14 +2,11 @@ package dk.vixo.missing_people.fragments;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import dk.vixo.missing_people.CameraActivity;
 import dk.vixo.missing_people.MainActivity;
 import dk.vixo.missing_people.R;
 import dk.vixo.missing_people.model.Missing;
@@ -78,7 +74,7 @@ public class PostMissingFragment extends Fragment {
         cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                if (getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, MY_CAMERA);
 
@@ -95,8 +91,8 @@ public class PostMissingFragment extends Fragment {
         postBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(editText.getText().equals("")) {
-                   return;
+                if (editText.getText().equals("")) {
+                    return;
                 } else {
                     mCallback.PostMissingNews(editText.getText().toString(), "" + missing.getId());
                 }
@@ -117,10 +113,10 @@ public class PostMissingFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if(context instanceof OnCameraActivityStartListener) {
+        if (context instanceof OnCameraActivityStartListener) {
             mCallback = (OnCameraActivityStartListener) context;
         } else {
-            throw new ClassCastException(context.toString() +  " must be implementet OnMissingItemClickedListener");
+            throw new ClassCastException(context.toString() + " must be implementet OnMissingItemClickedListener");
         }
     }
 
@@ -135,7 +131,7 @@ public class PostMissingFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
@@ -147,6 +143,7 @@ public class PostMissingFragment extends Fragment {
 
     public interface OnCameraActivityStartListener {
         void StartCameraActivity();
+
         void PostMissingNews(String text, String missingId);
     }
 }

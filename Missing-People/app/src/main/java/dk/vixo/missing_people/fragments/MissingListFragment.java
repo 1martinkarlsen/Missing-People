@@ -80,10 +80,10 @@ public class MissingListFragment extends ListFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if(context instanceof OnMissingItemClickedListener) {
+        if (context instanceof OnMissingItemClickedListener) {
             mCallback = (OnMissingItemClickedListener) context;
         } else {
-            throw new ClassCastException(context.toString() +  " must be implementet OnMissingItemClickedListener");
+            throw new ClassCastException(context.toString() + " must be implementet OnMissingItemClickedListener");
         }
     }
 
@@ -95,7 +95,7 @@ public class MissingListFragment extends ListFragment {
 
     public void updateAdapter(ArrayList<Missing> newList) {
         missingArr.clear();
-        for(Missing sing : newList) {
+        for (Missing sing : newList) {
             missingArr.add(sing);
         }
         missingListAdapter.SetMissingList(missingArr);
@@ -103,8 +103,9 @@ public class MissingListFragment extends ListFragment {
     }
 
     public interface OnMissingItemClickedListener {
-        public void onMissingListUpdate();
-        public void onMissingSelected(int position, Missing itemDetail);
+        void onMissingListUpdate();
+
+        void onMissingSelected(int position, Missing itemDetail);
     }
 
     /**

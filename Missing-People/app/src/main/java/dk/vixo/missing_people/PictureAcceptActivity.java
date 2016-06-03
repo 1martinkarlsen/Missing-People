@@ -5,17 +5,14 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
-
-import dk.vixo.missing_people.control.ImageScaler;
 
 public class PictureAcceptActivity extends AppCompatActivity {
 
@@ -58,7 +55,6 @@ public class PictureAcceptActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                Log.v("Test2,", "Test igen igen");
                 finish();
             }
         });
@@ -85,7 +81,7 @@ public class PictureAcceptActivity extends AppCompatActivity {
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         int screenHeight = getResources().getDisplayMetrics().heightPixels;
 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             // Notice that width and height are reversed
             Bitmap scaled = Bitmap.createScaledBitmap(bm, screenHeight, screenWidth, true);
             int w = scaled.getWidth();
@@ -97,10 +93,9 @@ public class PictureAcceptActivity extends AppCompatActivity {
             bm = Bitmap.createBitmap(scaled, 0, 0, w, h, mtx, true);
         } else {
             //No need to reverse width and height
-            Bitmap scaled = Bitmap.createScaledBitmap(bm, screenWidth,screenHeight , true);
+            Bitmap scaled = Bitmap.createScaledBitmap(bm, screenWidth, screenHeight, true);
             bm = scaled;
         }
-
         return bm;
     }
 }

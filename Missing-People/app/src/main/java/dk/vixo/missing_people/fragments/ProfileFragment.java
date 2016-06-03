@@ -40,7 +40,7 @@ public class ProfileFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        SharedPreferences userPref = ((MainActivity) getActivity()).getSharedPreferences("userPref", Context.MODE_PRIVATE);
+        SharedPreferences userPref = getActivity().getSharedPreferences("userPref", Context.MODE_PRIVATE);
 
         String userStr = userPref.getString("User", null);
         User myUser;
@@ -62,7 +62,7 @@ public class ProfileFragment extends Fragment {
 
         // Finding TextViews
         txtFullName = (TextView) view.findViewById(R.id.profileShowName);
-        txtEmail    = (TextView) view.findViewById(R.id.profileShowEmail);
+        txtEmail = (TextView) view.findViewById(R.id.profileShowEmail);
 
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }

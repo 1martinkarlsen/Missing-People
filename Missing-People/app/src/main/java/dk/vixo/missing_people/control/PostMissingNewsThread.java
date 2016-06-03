@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -89,8 +88,6 @@ public class PostMissingNewsThread extends AsyncTask<String, String, Boolean> {
                 JSONObject missingObj = new JSONObject(response.toString());
                 boolean isPosted = missingObj.getBoolean("IsPosted");
 
-                Log.v("IS POSTED?", "" + isPosted);
-
                 return isPosted;
             }
             return false;
@@ -111,7 +108,7 @@ public class PostMissingNewsThread extends AsyncTask<String, String, Boolean> {
     protected void onPostExecute(Boolean b) {
         super.onPostExecute(b);
 
-        if(b) {
+        if (b) {
             Toast.makeText(context.getApplicationContext(), "News uploaded!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context.getApplicationContext(), "News uploaded!", Toast.LENGTH_SHORT).show();

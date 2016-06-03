@@ -28,7 +28,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import dk.vixo.missing_people.MainActivity;
 import dk.vixo.missing_people.R;
 import dk.vixo.missing_people.control.ImageScaler;
 import dk.vixo.missing_people.model.Missing;
@@ -50,8 +49,9 @@ public class SpecificMissingFragment extends Fragment {
     Button loadNewsBtn;
 
     public interface OnPostClicked {
-        public void OnPostClicked(Missing itemDetail);
-        public void NewsFragment(Missing itemDetail);
+        void OnPostClicked(Missing itemDetail);
+
+        void NewsFragment(Missing itemDetail);
     }
 
     public SpecificMissingFragment() {
@@ -82,7 +82,6 @@ public class SpecificMissingFragment extends Fragment {
         missingDetail.setId((int) bundle.getLong("Id"));
         missingDetail.setName(bundle.getString("NameOfMissingPerson"));
         missingDetail.setDescription(bundle.getString("Description"));
-
 
 
 //        // Converting date
@@ -131,7 +130,7 @@ public class SpecificMissingFragment extends Fragment {
         loadNewsBtn = (Button) view.findViewById(R.id.loadNewsBtn);
 
         // Set color of Follow button
-        if(missingDetail.isFollowing()) {
+        if (missingDetail.isFollowing()) {
             followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
             followBtn.setText(R.string.Unfollow);
         } else {
@@ -140,7 +139,7 @@ public class SpecificMissingFragment extends Fragment {
         }
 
         // Set color of Volunteer button
-        if(missingDetail.isVolunteering()) {
+        if (missingDetail.isVolunteering()) {
             volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
             volunteerBtn.setText(R.string.UnVolunteer);
         } else {
@@ -153,7 +152,7 @@ public class SpecificMissingFragment extends Fragment {
         followBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(missingDetail.isFollowing()) {
+                if (missingDetail.isFollowing()) {
                     new EngageMissingAsync("UnFollow").execute();
                 } else {
                     new EngageMissingAsync("Follow").execute();
@@ -163,7 +162,7 @@ public class SpecificMissingFragment extends Fragment {
         volunteerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(missingDetail.isVolunteering()) {
+                if (missingDetail.isVolunteering()) {
                     new EngageMissingAsync("UnVolunteer").execute();
                 } else {
                     new EngageMissingAsync("Volunteer").execute();
@@ -192,10 +191,10 @@ public class SpecificMissingFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if(context instanceof OnPostClicked) {
+        if (context instanceof OnPostClicked) {
             mCallback = (OnPostClicked) context;
         } else {
-            throw new ClassCastException(context.toString() +  " must be implementet OnMissingItemClickedListener");
+            throw new ClassCastException(context.toString() + " must be implementet OnMissingItemClickedListener");
         }
     }
 
@@ -255,7 +254,7 @@ public class SpecificMissingFragment extends Fragment {
             try {
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-                SharedPreferences userPref = ((MainActivity) getActivity()).getSharedPreferences("userPref", Context.MODE_PRIVATE);
+                SharedPreferences userPref = getActivity().getSharedPreferences("userPref", Context.MODE_PRIVATE);
                 User myUser = gson.fromJson(userPref.getString("User", null), User.class);
 
                 JSONObject jsonObject = new JSONObject();
@@ -317,9 +316,9 @@ public class SpecificMissingFragment extends Fragment {
         protected void onPostExecute(Missing missing) {
             super.onPostExecute(missing);
 
-            if(missing != null) {
+            if (missing != null) {
 
-                if(data.equals("Follow") || data.equals("UnFollow")) {
+                if (data.equals("Follow") || data.equals("UnFollow")) {
                     // Set followBtn color
                     if (missing.isFollowing()) {
                         followBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -332,7 +331,7 @@ public class SpecificMissingFragment extends Fragment {
                     }
                 }
 
-                if(data.equals("Volunteer") || data.equals("UnVolunteer")) {
+                if (data.equals("Volunteer") || data.equals("UnVolunteer")) {
                     // Set volunteerBtn color
                     if (missing.isVolunteering()) {
                         volunteerBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));

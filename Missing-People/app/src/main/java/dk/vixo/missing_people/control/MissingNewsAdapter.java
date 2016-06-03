@@ -2,10 +2,7 @@ package dk.vixo.missing_people.control;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import dk.vixo.missing_people.R;
-import dk.vixo.missing_people.model.Missing;
 import dk.vixo.missing_people.model.SearchNews;
 
 public class MissingNewsAdapter extends ArrayAdapter<SearchNews> {
@@ -43,7 +38,7 @@ public class MissingNewsAdapter extends ArrayAdapter<SearchNews> {
 
         ViewHolder viewHolder;
 
-        if(convertView == null) {
+        if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.searchnewsrow, parent, false);
@@ -56,7 +51,7 @@ public class MissingNewsAdapter extends ArrayAdapter<SearchNews> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        if(news.getPhoto() != null) {
+        if (news.getPhoto() != null) {
             Bitmap bm = news.getPhoto();
             Bitmap scaled = Bitmap.createScaledBitmap(bm, 200, 200, true);
             int w = scaled.getWidth();
