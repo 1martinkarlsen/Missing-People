@@ -55,7 +55,6 @@ public class MissingRest {
     @Consumes("application/json")
     @Path("/all")
     public Response getAllMissingPeople(String content) throws SQLException, UnknownServerException {
-        System.out.println(content);
         
         JsonObject json = new JsonParser().parse(content).getAsJsonObject();
         String userId = json.get("id").getAsString();
@@ -76,11 +75,16 @@ public class MissingRest {
                 jsonImg = Base64.encodeBase64String(missingPerson.getImage().getImg());
             }
             
+            String geoPos = "";
+            if(missingPerson.getGeoPosition() != null) {
+                geoPos = missingPerson.getGeoPosition();
+            }
+            
             singlePerson.addProperty("Id", missingPerson.getId());
             singlePerson.addProperty("Name", missingPerson.getNameOfMissingPerson());
             singlePerson.addProperty("Description", missingPerson.getDescription());
             singlePerson.addProperty("DateOfMissing", missingPerson.getDateOfMissing().toString());
-            singlePerson.addProperty("GeoPosition", missingPerson.getGeoPosition());
+            singlePerson.addProperty("GeoPosition", geoPos);
             singlePerson.addProperty("Photo", jsonImg);
             singlePerson.addProperty("IsFollowing", userFacade.checkIfFollowing(missingPerson.getId(), Long.parseLong(userId)));
             singlePerson.addProperty("IsVolunteering", userFacade.checkIfVolunteering(missingPerson.getId(), Long.parseLong(userId)));

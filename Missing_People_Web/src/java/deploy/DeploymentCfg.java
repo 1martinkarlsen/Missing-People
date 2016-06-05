@@ -40,12 +40,15 @@ public class DeploymentCfg implements ServletContextListener {
             User martin = new User("martin@vixo.dk", "1234", "Martin", "Karlsen");
             User rasmus = new User("info@terranaut.dk", "1234", "Rasmus", "Hansen");
             User kasper = new User("kasper@sylvestworm.dk", "1234", "Kasper", "Worm");
+            User peter = new User("peter@peter.dk", "1234", "Peter", "Pelo");
             martin.addRole(user);
             martin.addRole(admin);
             rasmus.addRole(user);
             rasmus.addRole(admin);
             kasper.addRole(user);
             kasper.addRole(admin);
+            peter.addRole(user);
+            peter.addRole(admin);
             
 //            Missing missingPerson1 = new Missing("Kasper Worm", "Forsvandt efter tur på Postpubben. Han plejer at dukke op efter skole, men mødte aldrig op, fredag.", new Date());
 //            missingPerson1.addAdmin(rasmus);
@@ -93,6 +96,7 @@ public class DeploymentCfg implements ServletContextListener {
                 em.persist(martin);
                 em.persist(rasmus);
                 em.persist(kasper);
+                em.persist(peter);
 //                em.persist(missingPerson1);
 //                em.persist(news1);
 //                em.persist(news2);
